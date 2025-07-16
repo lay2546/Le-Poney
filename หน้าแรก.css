@@ -1,0 +1,737 @@
+body {
+    font-family: 'Prompt', 'Sarabun', sans-serif;
+    background: #f9fafb;
+    margin: 0;
+    padding: 0;
+}
+.top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #ec4899;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+}
+.top-bar-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.menu-button {
+    font-size: 1.5rem;
+    background: none;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 280px;
+    height: 100%;
+    background-color: #fff;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    z-index: 200;
+    transition: transform 0.3s ease;
+    transform: translateX(100%);
+}
+.sidebar.show {
+    transform: translateX(0);
+}
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 10px;
+}
+.nav-link {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+.nav-link:hover {
+    background: #ec4899;
+    color: white;
+    transform: translateX(5px);
+}
+.login-button, .logout-button {
+    width: 100%;
+    background: #4caf50;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    margin-top: 10px;
+}
+.logout-button {
+    background: #d9534f;
+}
+.login-button:hover {
+    background: #388e3c;
+}
+.logout-button:hover {
+    background: #c9302c;
+}
+.home-container {
+    max-width: 1000px;
+    margin: 120px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+@media (max-width: 768px) {
+    .home-container {
+        margin: 100px 20px;
+        padding: 20px;
+    }
+    .promo-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+.dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+.dropdown-btn {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    padding: 10px 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s ease-in-out;
+}
+.dropdown-btn:hover {
+    background: #ec4899;
+    color: white;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    left: 0;
+    top: 100%;
+    z-index: 10;
+}
+.dropdown-content.show {
+    display: block;
+}
+.dropdown-link {
+    display: block;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+    transition: background 0.3s ease-in-out;
+}
+.dropdown-link:hover {
+    background: #ec4899;
+    color: white;
+}
+.arrow {
+    transition: transform 0.3s ease-in-out;
+}
+.arrow.rotate {
+    transform: rotate(180deg);
+}
+.modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 300;
+}
+.modal-content {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 1rem;
+    max-width: 24rem;
+    width: 100%;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+.close-modal {
+    position: absolute;
+    top: 0.75rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #ec4899;
+}
+.close-modal:hover {
+    color: #d61c6c;
+}
+.modal-input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #ccc;
+    margin-bottom: 1rem;
+}
+.modal-button {
+    background-color: #ec4899;
+    color: white;
+    font-weight: bold;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+.modal-button:hover {
+    background-color: #db2777;
+}
+.modal-button.green {
+    background-color: #16a34a;
+}
+.modal-button.green:hover {
+    background-color: #15803d;
+}
+.hidden {
+    display: none;
+}
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+.product-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+    padding: 15px;
+}
+.product-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+@media (max-width: 1024px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .sidebar {
+        width: 220px;
+    }
+}
+.logo-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logo-text::before {
+    content: "";
+    width: 50px;
+    height: 50px;
+    background-image: url('S__131055784-Photoroom.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.close-button {
+    font-size: 1.5rem;
+    color: #555;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+/* auth-modal.css */
+.modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+  }
+  
+  .modal-content {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 28rem;
+    padding: 1.5rem;
+    position: relative;
+  }
+  
+  .modal-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .input-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+  }
+  
+  .modal-input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    outline: none;
+  }
+  
+  .modal-button {
+    width: 100%;
+    padding: 0.5rem;
+    background-color: #ec4899;
+    color: white;
+    font-weight: bold;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .modal-button:hover {
+    background-color: #db2777;
+  }
+  
+  .modal-button.green {
+    background-color: #16a34a;
+  }
+  
+  .modal-button.green:hover {
+    background-color: #15803d;
+  }
+  
+  .close-modal {
+    position: absolute;
+    top: 0.75rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    color: #4b5563;
+    cursor: pointer;
+  }
+  
+  .close-modal:hover {
+    color: #ef4444;
+  }
+  
+  .modal-link {
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .modal-link:hover {
+    text-decoration: underline;
+  }
+.activities {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem 1rem;
+  max-width: 1000px;
+  margin: auto;
+}
+.activities a {
+  flex: 1 1 200px;
+  max-width: 250px;
+  background: white;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease;
+}
+.activities a:hover {
+  transform: scale(1.05);
+}
+.activities img {
+  width: 100%;
+  height: 14rem;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* หน้าแรก.css */
+
+/* อนิเมชัน fade-in */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease-out forwards;
+}
+
+/* สำหรับปรับแต่งฟอนต์โดยรวม */
+body {
+  font-family: 'Prompt', 'Sarabun', sans-serif;
+}
+
+/* Overlay กรณี modal */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+/* Sidebar ปรับแต่งเมื่อแสดงผล */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 308px;
+  height: 100%;
+  background-color: #fff;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  z-index: 200;
+  transition: transform 0.3s ease;
+  transform: translateX(100%);
+}
+.sidebar.show {
+  transform: translateX(0);
+}
+
+/* Modal พื้นหลัง */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 300;
+}
+
+/* Modal กล่องเนื้อหา */
+.modal-content {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  max-width: 24rem;
+  width: 100%;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+/* ปุ่มปิด Modal */
+.close-modal {
+  position: absolute;
+  top: 0.75rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #ec4899;
+}
+.close-modal:hover {
+  color: #d61c6c;
+}
+
+/* Input ใน Modal */
+.modal-input {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  margin-bottom: 1rem;
+}
+
+/* ปุ่มใน Modal */
+.modal-button {
+  background-color: #ec4899;
+  color: white;
+  font-weight: bold;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+.modal-button:hover {
+  background-color: #db2777;
+}
+.modal-button.green {
+  background-color: #16a34a;
+}
+.modal-button.green:hover {
+  background-color: #15803d;
+}
+
+/* -----------------------
+🌟 Banner Section
+------------------------ */
+.banner-section {
+  position: relative;
+  width: 100%;
+  margin-top: 5rem;
+}
+.banner-section img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-bottom-left-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+}
+.banner-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.25rem;
+  font-weight: bold;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 0.5rem 1.5rem;
+  border-radius: 9999px;
+}
+
+/* -----------------------
+🌸 Philosophy Section
+------------------------ */
+.philosophy-section {
+  text-align: center;
+  background: linear-gradient(to bottom right, #fce7f3, #fef9c3);
+  padding: 8rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+.philosophy-section:hover {
+  transform: scale(1.05);
+}
+.section-title {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border: 3px dashed #22d3ee;       /* เส้นขอบสีฟ้าพาสเทล */
+  border-radius: 1rem;
+  background-color: #ecfeff;        /* สีพื้นหลังพาสเทล */
+  color: #0e7490;                   /* สีข้อความ */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  font-size: 1.75rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+.section-desc {
+  font-size: 1.125rem;
+  color: #374151;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+/* -----------------------
+🎁 Promotion Section
+------------------------ */
+.promotion-section {
+  text-align: center;
+  margin-top: 3rem;
+}
+.promo-card {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-width: 20rem;
+  margin: 0 auto;
+  transition: transform 0.3s ease;
+}
+.promo-card:hover {
+  transform: scale(1.05);
+}
+.promo-img {
+  width: 8rem;
+  height: 8rem;
+  object-fit: cover;
+  margin: 0 auto 1rem;
+}
+.promo-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #d97706;
+}
+.promo-desc {
+  color: #4b5563;
+  margin-top: 0.5rem;
+}
+.promo-price {
+  margin-top: 0.75rem;
+  font-weight: bold;
+  font-size: 1.125rem;
+  color: #ec4899;
+}
+.btn-pink {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #ec4899;
+  color: white;
+  border-radius: 9999px;
+  transition: background-color 0.3s ease;
+}
+.btn-pink:hover {
+  background-color: #db2777;
+}
+
+/* -----------------------
+🧃 Smoothie Section
+------------------------ */
+.smoothie-grid {
+  max-width: 1140px;
+  margin: 3rem auto;
+  padding: 0 1rem;
+}
+.smoothie-grid .section-title {
+  font-size: 1.75rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+.day-box {
+  border: 2px solid #a5f3fc;           /* กรอบสีฟ้าพาสเทล */
+  background-color: #ecfeff;           /* สีพื้นหลังพาสเทล */
+  color: #0e7490;                      /* สีตัวหนังสือฟ้าเขียว */
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  font-weight: 500;
+  text-align: center;
+}
+.day-box:hover {
+  border-color: #67e8f9;               /* กรอบเข้มขึ้นเมื่อ hover */
+  background-color: #cffafe;
+  transform: translateY(-5px);
+}
+.day-box:nth-child(1) { border-color: #fcd34d; } /* Mon - เหลือง */
+.day-box:nth-child(2) { border-color: #f472b6; } /* Tue - ชมพู */
+.day-box:nth-child(3) { border-color: #fbbf24; } /* Wed - ส้ม */
+.day-box:nth-child(4) { border-color: #34d399; } /* Thu - เขียว */
+.day-box:nth-child(5) { border-color: #f97316; } /* Fri - แดงส้ม */
+.day-box:nth-child(6) { border-color: #93c5fd; } /* Sat - ฟ้า */
+.day-box:nth-child(7) { border-color: #a78bfa; } /* Sun - ม่วง */
+
+/* -----------------------
+🧁 Navigation Activities
+------------------------ */
+.activities {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem 1rem;
+  max-width: 1000px;
+  margin: auto;
+}
+.nav-card {
+  background: #fff;
+  border: 2px solid #fce7f3; /* กรอบพาสเทล */
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  text-align: center;
+  text-decoration: none;
+  padding: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nav-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  border-color: #f9a8d4; /* เปลี่ยนสีกรอบเล็กน้อยเมื่อ hover */
+}
+
+.nav-img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.nav-img:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+.nav-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* -----------------------
+🦶 Footer
+------------------------ */
+.footer {
+  background-color: #fce7f3;
+  margin-top: 5rem;
+  padding: 2rem;
+  text-align: center;
+  border-top-left-radius: 1.5rem;
+  border-top-right-radius: 1.5rem;
+  color: #4b5563;
+}
+.footer-links {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  font-size: 0.875rem;
+}
+.footer-link {
+  color: #ec4899;
+  text-decoration: none;
+}
+.footer-link:hover {
+  text-decoration: underline;
+}
+.bouncy-icon {
+  display: inline-block;
+  animation: bounce 1.2s infinite;
+  margin-right: 0.5rem;
+}
+
+/* เด้งนุ่ม ๆ แนว spring */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+

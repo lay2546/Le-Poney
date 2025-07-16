@@ -1,0 +1,26 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 👤 ผู้ใช้: อ่าน/เขียนได้เฉพาะข้อมูลของตัวเอง
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // 📦 สินค้า: อ่านได้ทุกคน, เขียนได้เฉพาะ admin
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin";
+    }
+
+    // 🧾 คำสั่งซื้อ: เจ้าของออเดอร์หรือ admin เท่านั้น
+    match /orders/{orderId} {
+      allow read, write: if request.auth != null &&
+        (
+          request.resource.data.userId == request.auth.uid ||
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin"
+        );
+    }
+  }
+}

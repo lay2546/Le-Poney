@@ -1,0 +1,765 @@
+/* -----------------------
+🌐 Base Styles
+------------------------ */
+body {
+  font-family: 'Prompt', 'Sarabun', sans-serif;
+  background: #f9fafb;
+  margin: 0;
+  padding: 0;
+}
+
+/* -----------------------
+🟣 Top Bar
+------------------------ */
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #ec4899;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+}
+.top-bar-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.menu-button {
+  font-size: 1.5rem;
+  background: none;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+/* -----------------------
+📱 Sidebar
+------------------------ */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 280px;
+  height: 100%;
+  background-color: #fff;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  z-index: 200;
+  transition: transform 0.3s ease;
+  transform: translateX(100%);
+}
+.sidebar.show {
+  transform: translateX(0);
+}
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 10px;
+}
+.nav-link {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+.nav-link:hover {
+  background: #ec4899;
+  color: white;
+  transform: translateX(5px);
+}
+
+/* -----------------------
+🔐 Login / Logout Button
+------------------------ */
+.login-button, .logout-button {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  color: white;
+}
+.login-button {
+  background: #4caf50;
+}
+.logout-button {
+  background: #d9534f;
+}
+.login-button:hover {
+  background: #388e3c;
+}
+.logout-button:hover {
+  background: #c9302c;
+}
+
+/* -----------------------
+🏠 Home Container
+------------------------ */
+.home-container {
+  max-width: 1000px;
+  margin: 120px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+@media (max-width: 768px) {
+  .home-container {
+    margin: 100px 20px;
+    padding: 20px;
+  }
+}
+
+/* -----------------------
+🔽 Dropdown
+------------------------ */
+.dropdown {
+  position: relative;
+  width: 100%;
+}
+.dropdown-btn {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  padding: 10px 15px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.3s ease-in-out;
+}
+.dropdown-btn:hover {
+  background: #ec4899;
+  color: white;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  left: 0;
+  top: 100%;
+  z-index: 10;
+}
+.dropdown-content.show {
+  display: block;
+}
+.dropdown-link {
+  display: block;
+  padding: 10px 15px;
+  color: #333;
+  text-decoration: none;
+  transition: background 0.3s ease-in-out;
+}
+.dropdown-link:hover {
+  background: #ec4899;
+  color: white;
+}
+.arrow {
+  transition: transform 0.3s ease-in-out;
+}
+.arrow.rotate {
+  transform: rotate(180deg);
+}
+
+/* -----------------------
+🧾 Modal
+------------------------ */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 300;
+}
+.modal-content {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  max-width: 24rem;
+  width: 100%;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+.close-modal {
+  position: absolute;
+  top: 0.75rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #ec4899;
+}
+.close-modal:hover {
+  color: #d61c6c;
+}
+.modal-input {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  margin-bottom: 1rem;
+}
+.modal-button {
+  background-color: #ec4899;
+  color: white;
+  font-weight: bold;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+.modal-button:hover {
+  background-color: #db2777;
+}
+.modal-button.green {
+  background-color: #16a34a;
+}
+.modal-button.green:hover {
+  background-color: #15803d;
+}
+
+/* -----------------------
+🛍️ Product Grid
+------------------------ */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+@media (max-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+.product-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  text-align: center;
+  padding: 15px;
+}
+.product-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* -----------------------
+📛 Misc
+------------------------ */
+.hidden {
+  display: none;
+}
+.logo-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.logo-text::before {
+  content: "";
+  width: 50px;
+  height: 50px;
+  background-image: url('S__131055784-Photoroom.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.close-button {
+  font-size: 1.5rem;
+  color: #555;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+/* Le Poney Café - Complete CSS Stylesheet */
+
+/* 🎨 Reset และ Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background: linear-gradient(135deg, #ffeef7 0%, #f0f9ff 100%);
+  min-height: 100vh;
+}
+
+/* 🌸 Philosophy Section */
+.philosophy-section {
+  background: linear-gradient(135deg, #fdf2f8 0%, #ecfdf5 100%);
+  padding: 3rem 2rem;
+  margin: 2rem 0;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.philosophy-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="%23fbbf24" opacity="0.3"/><circle cx="80" cy="80" r="2" fill="%23ec4899" opacity="0.3"/><circle cx="60" cy="30" r="1.5" fill="%2306b6d4" opacity="0.3"/></svg>');
+  pointer-events: none;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #be185d;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.bouncy-icon {
+  display: inline-block;
+  animation: bounce 2s infinite;
+  font-size: 3rem;
+  margin-right: 0.5rem;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.section-desc {
+  font-size: 1.25rem;
+  color: #374151;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.8;
+  position: relative;
+  z-index: 1;
+}
+
+/* 🧃 Smoothie Section */
+.smoothie-grid {
+  padding: 3rem 2rem;
+  background: linear-gradient(135deg, #f0f9ff 0%, #fef3c7 100%);
+  border-radius: 20px;
+  margin: 2rem 0;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-cyan-600 {
+  color: #0891b2;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.day-box {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  padding: 1.5rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e2e8f0;
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.day-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  transition: left 0.5s ease;
+}
+
+.day-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border-color: #06b6d4;
+}
+
+.day-box:hover::before {
+  left: 100%;
+}
+
+/* 🧭 Navigation Cards */
+.activities {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 3rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.nav-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 20px;
+  padding: 2rem;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #e2e8f0;
+}
+
+.nav-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nav-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  border-color: #06b6d4;
+}
+
+.nav-card:hover::before {
+  opacity: 1;
+}
+
+.nav-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 15px;
+  margin-bottom: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.nav-card:hover .nav-img {
+  transform: scale(1.05);
+}
+
+.nav-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.text-pink-700 {
+  color: #be185d;
+}
+
+.text-cyan-700 {
+  color: #0e7490;
+}
+
+.text-yellow-700 {
+  color: #a16207;
+}
+
+.text-indigo-700 {
+  color: #4338ca;
+}
+
+/* 🦶 Footer */
+.footer {
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+  color: #f9fafb;
+  padding: 3rem 2rem 2rem;
+  margin-top: 4rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ec4899, #06b6d4, #eab308, #8b5cf6);
+}
+
+.footer-text {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  font-weight: 500;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.footer-link {
+  color: #d1d5db;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.footer-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #ec4899, #06b6d4);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.footer-link:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.footer-link:hover::after {
+  width: 100%;
+}
+
+/* 📱 Responsive Design */
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 2rem;
+  }
+  
+  .bouncy-icon {
+    font-size: 2.5rem;
+  }
+  
+  .section-desc {
+    font-size: 1.1rem;
+  }
+  
+  .philosophy-section,
+  .smoothie-grid {
+    padding: 2rem 1rem;
+    margin: 1rem 0;
+  }
+  
+  .activities {
+    padding: 2rem 1rem;
+    gap: 1.5rem;
+  }
+  
+  .nav-card {
+    padding: 1.5rem;
+  }
+  
+  .nav-img {
+    height: 150px;
+  }
+  
+  .nav-title {
+    font-size: 1.25rem;
+  }
+  
+  .day-box {
+    padding: 1rem;
+    font-size: 0.95rem;
+  }
+  
+  .footer-links {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .grid-cols-2 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* 🎭 Additional Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.philosophy-section,
+.smoothie-grid,
+.nav-card {
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.nav-card:nth-child(1) { animation-delay: 0.1s; }
+.nav-card:nth-child(2) { animation-delay: 0.2s; }
+.nav-card:nth-child(3) { animation-delay: 0.3s; }
+.nav-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* 🌟 Utility Classes */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #ec4899 0%, #06b6d4 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 25px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(236, 72, 153, 0.4);
+}
+
+/* 🎨 Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, #ec4899 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+  .carousel-img {
+    height: 350px;
+    object-fit: cover;
+  }
+
+  .carousel-caption-custom {
+    background-color: rgba(255, 182, 193, 0.7); /* พื้นหลังชมพูโปร่งใส */
+    border-radius: 1rem;
+    padding: 1rem;
+    color: #fff;
+  }
+
+  .carousel-caption-custom h5 {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .carousel-caption-custom p {
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+  }
+
+  .carousel-inner {
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+  #top-bar {
+  margin-bottom: 24px; /* หรือจะใช้ 32px, 40px ตามความห่างที่ต้องการ */
+}
+#slides img {
+  width: 100%;
+  height: 400px; /* หรือ 300px ถ้าอยากเตี้ยลง */
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+.slider-section {
+  width: 1520.8px;
+  height: 400px;
+  margin: 40px auto 0 auto; /* เว้นบนถ้าไม่อยากให้กิน header */
+  overflow: hidden;
+  position: relative;
+  border-radius: 18px;
+  background: #eee;
+}
+.slider-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+.slider-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.slider-img.contain-mode {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  background-color: #fff; /* หรือสีพื้นหลังให้กลืนกับภาพ */
+  flex-shrink: 0;
+}
+

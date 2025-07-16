@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="module" src="firebase.js"></script>
+<script type="module" src="firebase-auth-modal.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+  <!-- 🔝 Navbar -->
+  <header class="bg-pink-600 text-white py-5 shadow-md">
+    <div class="container mx-auto px-6 flex justify-between items-center">
+      <h1 class="text-2xl font-bold">📊 Admin Dashboard</h1>
+      <nav class="space-x-4">
+        <a href="admin_dashboard.html" class="hover:underline font-semibold">📈 Dashboard</a>
+        <a href="admin_product_upload_url_enhanced.html" class="hover:underline">➕ เพิ่มสินค้า</a>
+        <a href="admin_order.html" class="hover:underline">📦 ส่งสินค้า</a>
+        <a href="admin_coupon.html" class="hover:underline"> 🎟 ส่วนลด</a>
+        <a href="admin-users.html" class="hover:underline font-bold underline text-white">👥 จัดการผู้ใช้</a>
+        <a href="Home.html" class="hover:underline">🏠 หน้าแรก</a>
+        <button id="logout-btn" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">🚪 ออกจากระบบ</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 📊 Dashboard Content -->
+  <main class="p-6">
+    <div class="grid grid-cols-2 gap-4 mb-6 max-w-4xl mx-auto">
+      <div class="bg-white p-6 rounded-lg shadow text-center">
+        <h2 class="text-xl font-bold text-gray-600">💰 ยอดขายรวม</h2>
+        <p id="total-sales" class="text-2xl text-green-600 font-bold mt-2">฿0</p>
+      </div>
+      <div class="bg-white p-6 rounded-lg shadow text-center">
+        <h2 class="text-xl font-bold text-gray-600">📦 จำนวนคำสั่งซื้อ</h2>
+        <p id="total-orders" class="text-2xl text-blue-600 font-bold mt-2">0 รายการ</p>
+      </div>
+      <div class="text-center mt-6">
+  <label for="date-filter" class="font-medium">📅 เลือกวัน:</label>
+  <input type="date" id="date-filter" class="ml-2 px-3 py-1 rounded border shadow-sm" />
+</div>
+
+  </select>
+</div>
+
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow max-w-4xl mx-auto">
+      <h2 class="text-xl font-bold text-center mb-4 text-gray-700">📅 กราฟยอดขายรายวัน</h2>
+      <canvas id="salesChart" height="150"></canvas>
+    </div>
+  </main>
+
+  <!-- 🔒 Admin Scripts -->
+  <script type="module" src="admin-auth.js"></script>
+  <script type="module" src="admin-dashboard-report.js"></script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Sidebar with Dropdown</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="Delivery.css">  
+<script type="module" src="firebase.js"></script>
+<script type="module" src="firebase-auth-modal.js"></script>
+</head>
+<body class="bg-gray-100">
+
+    <!-- 🌟 แถบด้านบน (Top Bar) -->
+    <header id="top-bar" class="top-bar">
+        <h1 class="top-bar-title logo-text">Le Poney</h1>
+        <div class="top-bar-buttons">
+            <button id="menu-btn" class="menu-button">☰</button>
+        </div>
+    </header>
+
+    <!-- 🌟 Overlay -->
+    <div id="overlay" class="overlay hidden"></div>
+
+    <!-- 🌟 Sidebar (Responsive) -->
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <button id="close-btn" class="close-button">&times;</button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="Home.html" class="nav-link">🏡 Home</a>
+            <div class="dropdown">
+                <button class="dropdown-btn">
+                    🛍️ Product <span class="arrow">&#9662;</span>
+                </button>
+                <div class="dropdown-content">
+                    <a href="Product.html" class="dropdown-link">🍰 Bakery & Dessert</a>
+                    <a href="Product2.html" class="dropdown-link">🥤 SMOOTHIE & OTHERS</a>
+                </div>
+            </div>
+        
+            <!-- 🌟 เมนู Cart ใน Sidebar -->
+            <a href="Cart.html" id="cart-menu" class="nav-link">🛒 Cart <span id="cart-count">(0)</span></a>
+            <a href="OrderHistory.html" id="order-history-link" class="nav-link hidden">📋 ประวัติการสั่งซื้อ</a>
+            <a href="Delivery.html" class="nav-link">🚚 Delivery</a>
+            <a href="Event.html" class="nav-link">📅 Event</a>
+            <a id="login-btn" class="nav-link cursor-pointer">🔑 Login</a>
+            <a id="logout-btn" class="nav-link cursor-pointer hidden">🚪 Logout</a>
+        </nav>
+    </aside>
+
+    <!-- 🌟 Modal Popup สำหรับล็อกอิน -->
+    <div id="login-modal" class="modal hidden">
+      <div class="modal-content">
+        <button id="close-login-modal" class="close-modal">&times;</button>
+        <h2 class="modal-title text-pink-600">🔑 เข้าสู่ระบบ</h2>
+
+        <!-- 🧾 ฟอร์มล็อกอิน -->
+        <label for="login-email" class="input-label">อีเมล</label>
+        <input type="email" id="login-email" class="modal-input" placeholder="example@email.com" />
+
+        <label for="login-password" class="input-label">รหัสผ่าน</label>
+        <input type="password" id="login-password" class="modal-input" placeholder="กรอกรหัสผ่าน" />
+        <p id="reset-password-link" class="text-center mt-2 text-sm text-blue-600 cursor-pointer">
+  🔁 ลืมรหัสผ่านใช่ไหม? รีเซ็ตที่นี่
+</p>
+        <button id="submit-login" class="modal-button">เข้าสู่ระบบ</button>
+
+        <div class="my-4 text-center text-sm text-gray-400">หรือ</div>
+
+        <!-- 🔐 ปุ่มล็อกอินด้วย Google -->
+        <button id="google-login-btn" class="modal-button bg-white border border-gray-300 text-gray-700 flex items-center justify-center gap-2">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google" />
+          เข้าสู่ระบบด้วย Google
+        </button>
+
+        <p class="text-center mt-4 text-sm text-gray-600">
+          ยังไม่มีบัญชี?
+          <span id="openRegister" class="text-pink-600 modal-link">สมัครสมาชิก</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- 📝 Modal สมัครสมาชิก -->
+    <div id="register-modal" class="modal hidden">
+      <div class="modal-content">
+        <button id="close-register-modal" class="close-modal">&times;</button>
+        <h2 class="modal-title text-green-600">📝 สมัครสมาชิก</h2>
+
+        <!-- 📥 ฟอร์มลงทะเบียน -->
+        <label for="register-firstname" class="input-label">ชื่อ</label>
+        <input type="text" id="register-firstname" class="modal-input" placeholder="ชื่อจริง" />
+
+        <label for="register-lastname" class="input-label">นามสกุล</label>
+        <input type="text" id="register-lastname" class="modal-input" placeholder="นามสกุล" />
+
+        <label for="register-username" class="input-label">ชื่อผู้ใช้</label>
+        <input type="text" id="register-username" class="modal-input" placeholder="ชื่อผู้ใช้ (ไม่ซ้ำ)" />
+
+        <label for="register-phone" class="input-label">หมายเลขโทรศัพท์</label>
+        <input type="tel" id="register-phone" class="modal-input" placeholder="0812345678" />
+
+        <label for="register-email" class="input-label">อีเมล</label>
+        <input type="email" id="register-email" class="modal-input" placeholder="example@email.com" />
+
+        <label for="register-password" class="input-label">รหัสผ่าน</label>
+        <input type="password" id="register-password" class="modal-input" placeholder="ตั้งรหัสผ่าน" />
+
+        <button id="submit-register" class="modal-button green">สมัครสมาชิก</button>
+
+        <p class="text-center mt-4 text-sm text-gray-600">
+          มีบัญชีอยู่แล้ว?
+          <span id="backToLogin" class="text-green-600 modal-link">กลับเข้าสู่ระบบ</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="container">
+        <div class="container" style="margin-top: 100px;">
+            <h1 class="title">📦 วิธีการจัดส่ง</h1>
+            <p class="description">คิดตามราคาค่าจัดส่งจริงตามที่บริษัทจัดส่งคิด เช่น <strong>GRAB</strong></p>
+            
+            <div class="address-section">
+                <h2>📍 จุดรับสินค้า / จุดเริ่มต้นจัดส่ง</h2>
+                <ul>
+                    <li>⭐ บ้านเลขที่ 19 ซอยพิพัฒน์ 2 ถนนสีลม เขตบางรัก กรุงเทพฯ 10500</li>
+                    <li>⭐ บ้านเลขที่ 14/1 ซอยกาญจนาภิเษก 007 ถนนกาญจนาภิเษก เขตบางแคเหนือ กรุงเทพฯ 10160</li>
+                </ul>
+            </div>
+            
+            <h1 class="title">🛒 วิธีการสั่งซื้อ</h1>
+            <div class="order-section">
+                <h2>🍞 Bakeries</h2>
+                <p>PRE-ORDER อย่างน้อย <strong>3 วัน</strong></p>
+                <h2>🥤 Smoothies</h2>
+                <p>PRE-ORDER อย่างน้อย <strong>1 วัน</strong></p>
+            </div>
+    
+            <h1 class="title">📋 กรอกข้อมูลสำหรับจัดส่ง</h1>
+            <form class="delivery-form">
+                <label for="name">👤 ชื่อ-นามสกุล:</label>
+                <input type="text" id="name" name="name" placeholder="กรอกชื่อของคุณ" required="">
+                
+                <label for="phone">📱 เบอร์โทรศัพท์:</label>
+                <input type="tel" id="phone" name="phone" placeholder="กรอกเบอร์โทรศัพท์" required="">
+                
+                <label for="address">📦 ที่อยู่จัดส่ง:</label>
+                <textarea id="address" name="address" placeholder="กรอกที่อยู่จัดส่ง" required=""></textarea>
+                
+                <label for="delivery-option">🚚 วิธีการจัดส่ง:</label>
+                <select id="delivery-option" name="delivery-option" required="">
+                    <option value="grab">GRAB</option>
+                    <option value="lineman">LINE MAN</option>
+                    <option value="other">ขนส่งอื่นๆ</option>
+                </select>
+                
+                <button type="button" id="confirm-order-btn" class="submit-btn">✅ ยืนยันการสั่งซื้อ</button>
+            </form>
+        </div>
+        <!-- ✅ ใช้ JavaScript ที่อัปเดตแล้ว -->
+<script type="module" src="Delivery.js"></script>
+<script type="module" src="firebase-auth-modal.js"></script>
+<script type="module" src="redirect-to-admin.js"></script>
+
+    </div>
+</body>
+</html>

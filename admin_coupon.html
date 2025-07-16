@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>จัดการคูปอง | Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module" src="admin_coupon.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+  <!-- 🔝 Navbar -->
+  <header class="bg-pink-600 text-white py-4 shadow-lg">
+    <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+      <h1 class="text-2xl font-bold mb-2 md:mb-0">📊 Admin Dashboard</h1>
+      <nav class="space-x-4 text-sm md:text-base">
+        <a href="admin_dashboard.html" class="hover:underline">📈 Dashboard</a>
+        <a href="admin_product_upload_url_enhanced.html" class="hover:underline">➕ เพิ่มสินค้า</a>
+        <a href="admin_order.html" class="hover:underline">📦 ส่งสินค้า</a>
+        <a href="admin_coupon.html" class="hover:underline"> 🎟 ส่วนลด</a>
+        <a href="admin-users.html" class="hover:underline">👥 ผู้ใช้</a>
+        <a href="Home.html" class="hover:underline">🏠 หน้าแรก</a>
+        <button id="logout-btn" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">🚪 ออก</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 🔸 Main Content -->
+  <main class="max-w-3xl mx-auto mt-10 bg-white rounded-xl shadow p-6 space-y-6">
+
+    <h2 class="text-2xl font-bold text-pink-600 text-center">🎟️ จัดการคูปองส่วนลด</h2>
+
+    <!-- 🔹 ฟอร์มเพิ่มคูปอง -->
+    <section class="space-y-4">
+      <input type="text" id="code" placeholder="รหัสคูปอง เช่น PONEY20"
+        class="w-full border border-pink-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-pink-500"/>
+
+      <input type="number" id="discount" placeholder="ส่วนลด (%)"
+        class="w-full border border-pink-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-pink-500"/>
+
+      <input type="datetime-local" id="expireDate"
+        class="w-full border border-pink-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-pink-500"/>
+
+      <button id="addCoupon"
+        class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded transition">
+        ➕ เพิ่มคูปอง
+      </button>
+    </section>
+
+    <!-- 🔹 ตารางแสดงคูปอง -->
+    <section>
+      <table class="w-full border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+        <thead class="bg-gray-200 text-gray-700">
+          <tr>
+            <th class="p-3">รหัส</th>
+            <th class="p-3">ส่วนลด</th>
+            <th class="p-3">หมดอายุ</th>
+            <th class="p-3 text-center">จัดการ</th>
+          </tr>
+        </thead>
+        <tbody id="couponTable" class="bg-white divide-y divide-gray-200 text-sm">
+          <!-- เติมคูปองตรงนี้ -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 🔹 รายการออเดอร์ที่ใช้คูปอง -->
+    <section>
+      <h3 class="text-lg font-semibold text-gray-700 mb-2">📋 คำสั่งซื้อที่ใช้คูปอง</h3>
+      <ul id="couponOrders" class="list-disc list-inside text-gray-600 space-y-1 text-sm">
+        <!-- เติมตรงนี้ -->
+      </ul>
+    </section>
+
+  </main>
+</body>
+</html>

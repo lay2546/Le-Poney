@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin เพิ่มสินค้า (URL)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module" src="firebase.js"></script>
+  <script type="module" src="firebase-auth-modal.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <header class="bg-pink-600 text-white py-5 shadow-md">
+    <div class="container mx-auto px-6 flex justify-between items-center">
+      <h1 class="text-2xl font-bold">🎛️ Admin Panel</h1>
+      <nav class="space-x-4">
+        <a href="admin_dashboard.html" class="hover:underline font-semibold">📈 Dashboard</a>
+        <a href="admin_product_upload_url_enhanced.html" class="hover:underline">➕ เพิ่มสินค้า</a>
+        <a href="admin_order.html" class="hover:underline">📦 ส่งสินค้า</a>
+        <a href="admin_coupon.html" class="hover:underline"> 🎟 ส่วนลด</a>
+        <a href="admin-users.html" class="hover:underline font-bold underline text-white">👥 จัดการผู้ใช้</a>
+        <a href="Home.html" class="hover:underline">🏠 หน้าแรก</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex flex-col items-center justify-center p-6">
+    <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-md mt-6">
+      <h2 class="text-2xl font-bold text-center text-pink-600 mb-6">📦 เพิ่มสินค้า (ด้วย URL รูปภาพ)</h2>
+
+      <form id="product-form" class="space-y-4">
+        <input type="hidden" id="edit-id" />
+
+        <div>
+          <label for="name" class="block font-semibold">ชื่อสินค้า</label>
+          <input type="text" id="name" required class="w-full border px-3 py-2 rounded" />
+        </div>
+
+        <div>
+          <label for="price" class="block font-semibold">ราคา (บาท)</label>
+          <input type="number" id="price" required class="w-full border px-3 py-2 rounded" />
+        </div>
+
+        <div>
+          <label for="category" class="block font-semibold">หมวดหมู่สินค้า</label>
+          <select id="category" class="w-full border px-3 py-2 rounded">
+            <option value="bakery">🍰 Bakery & Dessert</option>
+            <option value="smoothie">🥤 SMOOTHIE & OTHERS</option>
+          </select>
+        </div>
+
+        <!-- 🌐 กรอก URL -->
+        <div class="mb-2">
+          <label for="imageUrlInput" class="block font-semibold">🌐 ใส่ URL รูปภาพ</label>
+          <input type="url" id="imageUrlInput" placeholder="https://..." class="w-full border px-3 py-2 rounded" />
+        </div>
+
+        <!-- 📷 อัปโหลดไฟล์ -->
+        <div class="mb-2">
+          <label for="imageFileInput" class="block font-semibold">📷 หรือ อัปโหลดรูปภาพ</label>
+          <input type="file" id="imageFileInput" accept="image/*" class="w-full border px-3 py-2 rounded" />
+        </div>
+
+        <!-- 🔗 URL สุดท้ายที่จะส่ง -->
+        <input type="hidden" id="imageUrl" />
+
+        <!-- 🖼 preview -->
+        <img id="imagePreview" class="w-full max-h-60 rounded shadow border object-contain hidden" />
+
+        <div>
+          <button type="submit" class="w-full bg-pink-600 text-white py-2 rounded hover:bg-pink-700" id="submit-button">✅ เพิ่มสินค้า</button>
+        </div>
+      </form>
+    
+
+      <p id="status" class="text-center mt-4 text-sm text-gray-600"></p>
+    </div>
+
+    <!-- ส่วนกรองหมวดหมู่ -->
+    <div class="mb-4 text-center">
+      <label for="filter-category" class="font-semibold">🔎 กรองหมวดหมู่:</label>
+      <select id="filter-category" class="border px-3 py-2 rounded ml-2">
+        <option value="all">📂 แสดงทั้งหมด</option>
+        <option value="bakery">🍰 Bakery & Dessert</option>
+        <option value="smoothie">🥤 SMOOTHIE & OTHERS</option>
+      </select>
+    </div>
+
+    <div class="mt-10 w-full max-w-2xl">
+      <h3 class="text-xl font-bold text-center text-gray-800 mb-4">🗂️ รายการสินค้าทั้งหมด</h3>
+      <ul id="product-list" class="space-y-4"></ul>
+    </div>
+  </main>
+
+  <script type="module" src="admin-auth.js"></script>
+  <script type="module" src="admin-product-upload-url.js"></script>
+
+  <script>
+    // ✅ เมื่อกรอก URL ให้แสดงรูป preview
+    const imageUrlInput = document.getElementById('imageUrlInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const statusText = document.getElementById('status');
+
+    imageUrlInput.addEventListener('input', () => {
+      const url = imageUrlInput.value;
+      if (url.match(/^https?:\/\/.*\.(jpg|jpeg|png|gif|webp)$/i)) {
+        imagePreview.src = url;
+        imagePreview.classList.remove('hidden');
+        statusText.textContent = "";
+      } else {
+        imagePreview.classList.add('hidden');
+        statusText.textContent = "❌ URL ต้องเป็นลิงก์รูปภาพ (.jpg, .png, .gif, .webp)";
+      }
+    });
+  </script>
+</body>
+
+</html>

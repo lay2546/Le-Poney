@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - รายการสั่งซื้อ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module" src="firebase.js"></script>
+  <script type="module" src="firebase-auth-modal.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+
+  <!-- 🔝 Navbar -->
+  <header class="bg-pink-600 text-white py-4 shadow-md">
+    <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-2">
+      <h1 class="text-2xl font-bold">📊 Admin Dashboard</h1>
+      <nav class="space-x-4 text-sm">
+        <a href="admin_dashboard.html" class="hover:underline font-semibold">📈 Dashboard</a>
+        <a href="admin_product_upload_url_enhanced.html" class="hover:underline">➕ เพิ่มสินค้า</a>
+        <a href="admin_order.html" class="hover:underline">📦 ส่งสินค้า</a>
+        <a href="admin-users.html" class="underline font-bold">👥 จัดการผู้ใช้</a>
+        <a href="Home.html" class="hover:underline">🏠 หน้าแรก</a>
+        <button id="logout-btn" class="ml-4 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">🚪 ออกจากระบบ</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 🧾 Title -->
+  <div class="text-center mt-8">
+    <h1 class="text-3xl font-bold text-pink-600">👥 รายชื่อผู้ใช้ทั้งหมด</h1>
+  </div>
+
+  <!-- 🔍 Search -->
+  <div class="max-w-md mx-auto mt-6 px-4">
+    <input type="text" id="search-user" placeholder="🔍 ค้นหาชื่อหรืออีเมลผู้ใช้..." 
+      class="w-full px-4 py-2 border border-gray-300 rounded shadow-sm focus:ring-2 focus:ring-pink-300 focus:outline-none" />
+  </div>
+
+  <!-- 📋 Table -->
+  <div class="max-w-6xl mx-auto mt-6 px-4 overflow-x-auto">
+    <table class="w-full bg-white rounded shadow-md text-sm">
+      <thead class="bg-pink-100 text-gray-800">
+        <tr>
+          <th class="py-3 px-4 text-left">👤 ชื่อ</th>
+          <th class="py-3 px-4 text-left">📧 อีเมล</th>
+          <th class="py-3 px-4 text-left">📱 เบอร์</th>
+          <th class="py-3 px-4 text-left">📆 สมัครเมื่อ</th>
+          <th class="py-3 px-4 text-center">📦 คำสั่งซื้อ</th>
+          <th class="py-3 px-4 text-center">📍 ที่อยู่</th>
+          <th class="py-3 px-4 text-center">🗑 ลบ</th>
+        </tr>
+      </thead>
+      <tbody id="user-table-body" class="divide-y divide-gray-200">
+        <!-- JavaScript will populate this -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 📜 Scripts -->
+  <script type="module" src="admin-auth.js"></script>
+  <script type="module" src="admin-users.js" defer></script>
+
+</body>
+</html>
