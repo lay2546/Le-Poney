@@ -762,4 +762,44 @@ body {
   background-color: #fff; /* หรือสีพื้นหลังให้กลืนกับภาพ */
   flex-shrink: 0;
 }
+/* มือถือ */
+@media (max-width: 576px) {
+  .activities {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  header .logo-text {
+    font-size: 1.2rem;
+  }
+  .nav-card img {
+    height: auto;
+    width: 100%;
+  }
+}
+
+/* แท็บเล็ต */
+@media (max-width: 768px) {
+  .activities {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+/* Responsive Slider */
+#slides img {
+  height: auto;
+  max-height: 400px; /* สูงสุดใน Desktop */
+  object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  #slides img {
+    max-height: 250px; /* ลดความสูงบนแท็บเล็ต */
+  }
+}
+
+@media (max-width: 480px) {
+  #slides img {
+    max-height: 180px; /* ลดความสูงบนมือถือ */
+  }
+}
+
 

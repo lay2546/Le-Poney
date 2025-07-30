@@ -17,19 +17,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchBtn = document.getElementById("search-btn");
   const filterDate = document.getElementById("filter-date");
 
-  // ✅ โปรไฟล์ฟอร์ม
+  // ✅ Profile form
   const nameInput = document.getElementById("profile-name");
   const lastnameInput = document.getElementById("profile-lastname");
   const usernameInput = document.getElementById("profile-username");
   const phoneInput = document.getElementById("profile-phone");
   const addressInput = document.getElementById("profile-address");
-  const emailInput = document.getElementById("profile-email"); // จาก Firebase Auth
+  const emailInput = document.getElementById("profile-email"); // From Firebase Auth
 
-  orderList.innerHTML = "<li class='text-center text-gray-500'>⏳ กำลังโหลดข้อมูล...</li>";
+  orderList.innerHTML = "<li class='text-center text-gray-500'>⏳ Loading data...</li>";
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
-      alert("❌ กรุณาเข้าสู่ระบบก่อนใช้งานหน้านี้");
+      alert("❌ Please login to access this page.");
       window.location.href = "Home.html";
       return;
     }
@@ -41,16 +41,16 @@ document.addEventListener("DOMContentLoaded", () => {
       if (docSnap.exists()) {
         const data = docSnap.data();
 
-        // ✅ แสดงข้อมูลที่อยู่ล่าสุดใน sidebar
+        // ✅ Show latest address info in sidebar
         if (addressInfo) {
           addressInfo.innerHTML = `
-            <p><strong>ชื่อ:</strong> <span id="info-name">${data.name || "-"}</span></p>
-            <p><strong>เบอร์โทร:</strong> <span id="info-phone">${data.phone || "-"}</span></p>
-            <p><strong>ที่อยู่:</strong> <span id="info-address">${data.address || "-"}</span></p>
+            <p><strong>Name:</strong> <span id="info-name">${data.name || "-"}</span></p>
+            <p><strong>Phone:</strong> <span id="info-phone">${data.phone || "-"}</span></p>
+            <p><strong>Address:</strong> <span id="info-address">${data.address || "-"}</span></p>
           `;
         }
 
-        // ✅ เติมข้อมูลในฟอร์มโปรไฟล์
+        // ✅ Fill profile form
         if (nameInput) nameInput.value = data.name || "";
         if (lastnameInput) lastnameInput.value = data.lastname || "";
         if (usernameInput) usernameInput.value = data.username || "";
@@ -59,29 +59,29 @@ document.addEventListener("DOMContentLoaded", () => {
         if (emailInput) emailInput.value = user.email || ""; // Auth email
       }
 
-      // ✅ ปุ่มแก้ไขที่อยู่
+      // ✅ Edit address button
       if (editAddressBtn) {
         editAddressBtn.addEventListener("click", async () => {
-          const name = prompt("ชื่อใหม่:", document.getElementById("info-name")?.textContent || "");
-          const phone = prompt("เบอร์โทรใหม่:", document.getElementById("info-phone")?.textContent || "");
-          const address = prompt("ที่อยู่ใหม่:", document.getElementById("info-address")?.textContent || "");
+          const name = prompt("New name:", document.getElementById("info-name")?.textContent || "");
+          const phone = prompt("New phone:", document.getElementById("info-phone")?.textContent || "");
+          const address = prompt("New address:", document.getElementById("info-address")?.textContent || "");
 
           if (name && phone && address) {
             await setDoc(docRef, { name, phone, address }, { merge: true });
             addressInfo.innerHTML = `
-              <p><strong>ชื่อ:</strong> <span id="info-name">${name}</span></p>
-              <p><strong>เบอร์โทร:</strong> <span id="info-phone">${phone}</span></p>
-              <p><strong>ที่อยู่:</strong> <span id="info-address">${address}</span></p>
+              <p><strong>Name:</strong> <span id="info-name">${name}</span></p>
+              <p><strong>Phone:</strong> <span id="info-phone">${phone}</span></p>
+              <p><strong>Address:</strong> <span id="info-address">${address}</span></p>
             `;
-            alert("✅ แก้ไขที่อยู่เรียบร้อยแล้ว");
+            alert("✅ Address updated successfully.");
           }
         });
       }
 
-      // ✅ โหลดคำสั่งซื้อ
+      // ✅ Load orders
       await loadOrders(user);
 
-      // ✅ ฟิลเตอร์ตามวันที่
+      // ✅ Filter by date
       if (searchBtn && filterDate) {
         searchBtn.addEventListener("click", async () => {
           await loadOrders(user, filterDate.value);
@@ -89,19 +89,19 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
     } catch (error) {
-      console.error("🔥 เกิดข้อผิดพลาด:", error);
+      console.error("🔥 Error occurred:", error);
     }
   });
 
   async function loadOrders(user, selectedDate = "") {
-    orderList.innerHTML = "<li class='text-center text-gray-500'>⏳ กำลังโหลดข้อมูล...</li>";
+    orderList.innerHTML = "<li class='text-center text-gray-500'>⏳ Loading orders...</li>";
 
     try {
       const q = query(collection(db, "orders"), where("uid", "==", user.uid));
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.empty) {
-        orderList.innerHTML = "<li class='text-center text-gray-500'>ไม่มีประวัติการสั่งซื้อ</li>";
+        orderList.innerHTML = "<li class='text-center text-gray-500'>No order history found.</li>";
         return;
       }
 
@@ -127,31 +127,31 @@ document.addEventListener("DOMContentLoaded", () => {
         const li = document.createElement("li");
         li.className = "bg-gray-100 p-4 rounded shadow";
         li.innerHTML = `
-          <p><strong>🧾 หมายเลขคำสั่งซื้อ:</strong> ${docSnap.id}</p>
-          <p><strong>📦 สถานะ:</strong> ${
-            order.deliveryStatus === "preparing" ? "🛠 กำลังเตรียมสินค้า" :
-            order.deliveryStatus === "shipping" ? "🚚 กำลังจัดส่ง" :
-            order.deliveryStatus === "delivered" ? "✅ จัดส่งแล้ว" :
-            "⏳ รอดำเนินการ"
+          <p><strong>🧾 Order ID:</strong> ${docSnap.id}</p>
+          <p><strong>📦 Status:</strong> ${
+            order.deliveryStatus === "preparing" ? "🛠 Preparing" :
+            order.deliveryStatus === "shipping" ? "🚚 Shipping" :
+            order.deliveryStatus === "delivered" ? "✅ Delivered" :
+            "⏳ Pending"
           }</p>
-          <p><strong>👤 ชื่อผู้รับ:</strong> ${order.name || "-"}</p>
-          <p><strong>📞 เบอร์โทร:</strong> ${order.phone || "-"}</p>
-          <p><strong>🏠 ที่อยู่:</strong> ${order.address || "-"}</p>
-          <p><strong>💰 ยอดรวม:</strong> ฿${finalTotal.toFixed(2)}</p>
-          <p><strong>🗓️ เวลา:</strong> ${createdAt.toLocaleString()}</p>
-          <p><strong>💳 วิธีชำระเงิน:</strong> ${
-            order.paymentMethod === "transfer" ? "โอนเงิน" :
-            order.paymentMethod === "cod" ? "เก็บเงินปลายทาง" :
+          <p><strong>👤 Recipient:</strong> ${order.name || "-"}</p>
+          <p><strong>📞 Phone:</strong> ${order.phone || "-"}</p>
+          <p><strong>🏠 Address:</strong> ${order.address || "-"}</p>
+          <p><strong>💰 Total:</strong> ฿${finalTotal.toFixed(2)}</p>
+          <p><strong>🗓️ Date:</strong> ${createdAt.toLocaleString()}</p>
+          <p><strong>💳 Payment Method:</strong> ${
+            order.paymentMethod === "transfer" ? "Bank Transfer" :
+            order.paymentMethod === "cod" ? "Cash on Delivery" :
             order.paymentMethod || "-"
           }</p>
-          <p><strong>📦 รายการสินค้า:</strong></p>
+          <p><strong>📦 Items:</strong></p>
           <ul class="list-disc ml-5 mt-1">${itemList}</ul>
         `;
         orderList.appendChild(li);
       });
     } catch (err) {
-      console.error("🔥 โหลดคำสั่งซื้อล้มเหลว:", err);
-      orderList.innerHTML = "<li class='text-red-500'>❌ เกิดข้อผิดพลาดในการโหลดข้อมูล</li>";
+      console.error("🔥 Failed to load orders:", err);
+      orderList.innerHTML = "<li class='text-red-500'>❌ Failed to load data</li>";
     }
   }
 
@@ -186,12 +186,12 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       try {
-        // ใช้ user.uid จาก onAuthStateChanged เพื่อความถูกต้อง
+        // Use user.uid from onAuthStateChanged for accuracy
         await setDoc(doc(db, "users", auth.currentUser.uid), updatedData, { merge: true });
-        alert("✅ บันทึกข้อมูลเรียบร้อยแล้ว");
+        alert("✅ Profile updated successfully.");
       } catch (err) {
-        console.error("❌ บันทึกข้อมูลล้มเหลว:", err);
-        alert("❌ เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+        console.error("❌ Failed to save profile:", err);
+        alert("❌ Error occurred while saving profile.");
       }
     });
   }

@@ -1,16 +1,17 @@
 <!DOCTYPE html>
+
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin - รายการสั่งซื้อ</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script type="module" src="firebase.js"></script>
-  <script type="module" src="firebase-auth-modal.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.0/dist/tesseract.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <style>
+<meta charset="utf-8"/>
+<title>Admin - รายการสั่งซื้อ</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="firebase.js" type="module"></script>
+<script src="firebase-auth-modal.js" type="module"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.0/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<style>
     th, td {
       padding: 0.75rem 1rem;
       font-size: 0.925rem;
@@ -27,95 +28,90 @@
   </style>
 </head>
 <body class="bg-gray-100 min-h-screen text-gray-800">
-
-  <!-- 🔝 Navbar -->
-  <header class="bg-pink-600 text-white py-5 shadow-md">
-    <div class="container mx-auto px-6 flex justify-between items-center">
-      <h1 class="text-2xl font-bold">📊 Admin Dashboard</h1>
-      <nav class="space-x-4 text-sm">
-      <a href="admin_dashboard.html" class="hover:underline font-semibold">📈 Dashboard</a>
-        <a href="admin_product_upload_url_enhanced.html" class="hover:underline">➕ เพิ่มสินค้า</a>
-        <a href="admin_order.html" class="hover:underline">📦 ส่งสินค้า</a>
-        <a href="admin_coupon.html" class="hover:underline"> 🎟 ส่วนลด</a>
-        <a href="admin-users.html" class="hover:underline ">👥 จัดการผู้ใช้</a>
-        <a href="Home.html" class="hover:underline">🏠 หน้าแรก</a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- 📋 เนื้อหาแสดงรายการสั่งซื้อ -->
-  <main class="p-6">
-    <h1 class="text-2xl md:text-3xl font-bold text-center text-pink-600 mb-6">📋 รายการสั่งซื้อทั้งหมด</h1>
-
-    <!-- 🔍 กรองตามวันที่ -->
-    <div class="mb-6 flex flex-wrap items-end gap-4 text-sm">
-      <div>
-        <label for="filter-date" class="block font-medium mb-1">📅 เลือกวันที่:</label>
-        <input type="date" id="filter-date" class="border p-2 rounded w-44" />
-      </div>
-      <div>
-        <label for="filter-month" class="block font-medium mb-1">🗓️ เลือกเดือน:</label>
-        <select id="filter-month" class="border p-2 rounded w-44">
-          <option value="">ทั้งหมด</option>
-          <option value="01">มกราคม</option>
-          <option value="02">กุมภาพันธ์</option>
-          <option value="03">มีนาคม</option>
-          <option value="04">เมษายน</option>
-          <option value="05">พฤษภาคม</option>
-          <option value="06">มิถุนายน</option>
-          <option value="07">กรกฎาคม</option>
-          <option value="08">สิงหาคม</option>
-          <option value="09">กันยายน</option>
-          <option value="10">ตุลาคม</option>
-          <option value="11">พฤศจิกายน</option>
-          <option value="12">ธันวาคม</option>
-        </select>
-      </div>
-      <button id="filter-button" class="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">🔍 ค้นหา</button>
-    </div>
-
-    <div class="overflow-x-auto rounded-lg shadow">
-      <table class="min-w-full bg-white text-left border">
-        <thead class="bg-pink-100 text-pink-800 sticky top-0 z-10 text-sm">
-          <tr>
-            <th class="border"><input type="checkbox" id="select-all" /></th>
-            <th class="border">👤 ชื่อลูกค้า</th>
-            <th class="border">📞 เบอร์โทร</th>
-            <th class="border">📍 ที่อยู่</th>
-            <th class="border">🚚 วิธีจัดส่ง</th>
-            <th class="border">🧺 รายการสินค้า</th>
-            <th class="border">🕒 เวลา</th>
-            <th class="border">💰 ยอดรวม</th>
-            <th class="border">💳 วิธีชำระเงิน</th>
-            <th class="border">🧾 สลิป</th>
-            <th class="border">📌 สถานะชำระเงิน</th>
-            <th class="border">⚙️ สถานะคำสั่งซื้อ</th>
-          </tr>
-        </thead>
-        <tbody id="order-table-body" class="text-gray-700">
-          <!-- JS จะเพิ่ม <tr> ที่มีข้อมูลและปุ่มสถานะที่นี่ -->
-        </tbody>
-      </table>
-    </div>
-
-    <!-- ปุ่มลบที่เลือก และ ยอดรวมทั้งหมด -->
-    <div class="flex flex-col md:flex-row justify-between items-center mt-6 gap-4 text-sm">
-      <div class="flex gap-2">
-        <button id="delete-selected" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+<!-- 🔝 Navbar -->
+<header class="bg-pink-600 text-white py-5 shadow-md">
+<div class="container mx-auto px-6 flex justify-between items-center">
+<h1 class="text-2xl font-bold">📊 Admin Dashboard</h1>
+<nav class="space-x-4 text-sm">
+<a class="hover:underline font-semibold" href="admin_dashboard.html">📈 Dashboard</a>
+<a class="hover:underline" href="admin_product_upload_url_enhanced.html">➕ เพิ่มสินค้า</a>
+<a class="hover:underline" href="admin_order.html">📦 ส่งสินค้า</a>
+<a class="hover:underline" href="admin_coupon.html">🎟 ส่วนลด</a>
+<a class="hover:underline" href="admin-users.html">👥 จัดการผู้ใช้</a>
+<a class="hover:underline" href="Home.html">🏠 หน้าแรก</a>
+</nav>
+</div>
+</header>
+<!-- 📋 เนื้อหาแสดงรายการสั่งซื้อ -->
+<main class="p-6">
+<h1 class="text-2xl md:text-3xl font-bold text-center text-pink-600 mb-6">📋 รายการสั่งซื้อทั้งหมด</h1>
+<!-- 🔍 กรองตามวันที่ -->
+<div class="mb-6 flex flex-wrap items-end gap-4 text-sm">
+<div>
+<label class="block font-medium mb-1" for="filter-date">📅 เลือกวันที่:</label>
+<input class="border p-2 rounded w-44" id="filter-date" type="date"/>
+</div>
+<div>
+<label class="block font-medium mb-1" for="filter-month">🗓️ เลือกเดือน:</label>
+<select class="border p-2 rounded w-44" id="filter-month">
+<option value="">ทั้งหมด</option>
+<option value="01">มกราคม</option>
+<option value="02">กุมภาพันธ์</option>
+<option value="03">มีนาคม</option>
+<option value="04">เมษายน</option>
+<option value="05">พฤษภาคม</option>
+<option value="06">มิถุนายน</option>
+<option value="07">กรกฎาคม</option>
+<option value="08">สิงหาคม</option>
+<option value="09">กันยายน</option>
+<option value="10">ตุลาคม</option>
+<option value="11">พฤศจิกายน</option>
+<option value="12">ธันวาคม</option>
+</select>
+</div>
+<button class="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700" id="filter-button">🔍 ค้นหา</button>
+</div>
+<div class="overflow-x-auto rounded-lg shadow">
+<table class="min-w-full bg-white text-left border">
+<thead class="bg-pink-100 text-pink-800 sticky top-0 z-10 text-sm">
+<tr>
+<th class="border"><input id="select-all" type="checkbox"/></th>
+<th class="border">👤 ชื่อลูกค้า</th>
+<th class="border">📞 เบอร์โทร</th>
+<th class="border">📍 ที่อยู่</th>
+<th class="border">🚚 วิธีจัดส่ง</th>
+<th class="border">🧺 รายการสินค้า</th>
+<th class="border">🕒 เวลา</th>
+<th class="border">💰 ยอดรวม</th>
+<th class="border">💳 วิธีชำระเงิน</th>
+<th class="border">🧾 สลิป</th>
+<th class="border">📌 สถานะชำระเงิน</th>
+<th class="border">📦 สถานะการจัดส่ง</th>
+<th class="border">⚙️ สถานะคำสั่งซื้อ</th>
+</tr>
+</thead>
+<tbody class="text-gray-700" id="order-table-body">
+<!-- JS จะเพิ่ม <tr> ที่มีข้อมูลและปุ่มสถานะที่นี่ -->
+</tbody>
+</table>
+</div>
+<!-- ปุ่มลบที่เลือก และ ยอดรวมทั้งหมด -->
+<div class="flex flex-col md:flex-row justify-between items-center mt-6 gap-4 text-sm">
+<div class="flex gap-2">
+<button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700" id="delete-selected">
           🗑️ ลบที่เลือก
         </button>
-        <button id="refresh-button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded">
+<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded" id="refresh-button">
           🔄 รีเฟรช
         </button>
-      </div>
-      <p class="text-lg font-semibold text-green-600">
+</div>
+<p class="text-lg font-semibold text-green-600">
         💰 ยอดรวมทั้งหมด: ฿<span id="grand-total">0.00</span>
-      </p>
-    </div>
-  </main>
-
-  <!-- 🔒 Admin Script -->
-  <script type="module" src="admin-auth.js"></script>
-  <script type="module" src="admin_order.js"></script>
-</body>
+</p>
+</div>
+</main>
+<!-- 🔒 Admin Script -->
+<script src="admin-auth.js" type="module"></script>
+<script src="admin_order.js" type="module"></script>
+<div class="fixed bottom-5 right-5 z-50 flex flex-col gap-3"><button class="w-12 h-12 rounded-full bg-pink-500 text-white text-2xl shadow-lg hover:bg-pink-600 hover:scale-110 transition" id="lang-th">🇹🇭</button><button class="w-12 h-12 rounded-full bg-blue-500 text-white text-2xl shadow-lg hover:bg-blue-600 hover:scale-110 transition" id="lang-en">🇺🇸</button></div><script src="lang-switcher.js"></script></body>
 </html>

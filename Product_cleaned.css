@@ -909,7 +909,7 @@ body {
 /* รูปสินค้า */
 .product-img {
   width: 100%;
-  height: 180px;
+  height: 275px;
   object-fit: cover;
   border-radius: 0.75rem;        /* มุมโค้ง */
   display: block;

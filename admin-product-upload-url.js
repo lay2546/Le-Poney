@@ -4,12 +4,26 @@ import {
   doc, getDoc, onSnapshot, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
+// ฟังก์ชันหักสต็อกสินค้า
+export async function deductStock(productId, quantityToDeduct) {
+  const productRef = doc(db, "products", productId);
+  const productSnap = await getDoc(productRef);
+  if (!productSnap.exists()) throw new Error("สินค้าไม่พบ");
+  const currentQuantity = productSnap.data().quantity ?? 0;
+  if (currentQuantity < quantityToDeduct) {
+    throw new Error("จำนวนสินค้าที่ขอสั่งเกินจากจำนวนคงเหลือ");
+  }
+  const newQuantity = currentQuantity - quantityToDeduct;
+  await updateDoc(productRef, { quantity: newQuantity });
+}
+
 const form = document.getElementById('product-form');
 const status = document.getElementById('status');
 const productList = document.getElementById('product-list');
 const editIdInput = document.getElementById('edit-id');
-const submitButton = document.getElementById('submit-button');
+const submitButton = document.querySelector('button[type="submit"]');
 const filterSelect = document.getElementById('filter-category');
+const sortSelect = document.getElementById('sort-select');
 const imageUrlInput = document.getElementById('imageUrlInput');
 const imageFileInput = document.getElementById('imageFileInput');
 const hiddenImageUrl = document.getElementById('imageUrl');
@@ -30,11 +44,12 @@ form.addEventListener('submit', async (e) => {
   const name = document.getElementById('name').value.trim();
   const price = parseFloat(document.getElementById('price').value);
   const category = document.getElementById('category').value;
+  const quantity = parseInt(document.getElementById('quantity').value);
   const imageUrl = hiddenImageUrl?.value.trim();
   const editId = editIdInput.value;
 
-  if (!name || !price) {
-    status.textContent = "❗ กรุณากรอกชื่อและราคาสินค้า";
+  if (!name || !price || isNaN(quantity)) {
+    status.textContent = "❗ กรุณากรอกชื่อ ราคา และจำนวนสินค้า";
     submitButton.disabled = false;
     return;
   }
@@ -42,13 +57,13 @@ form.addEventListener('submit', async (e) => {
   try {
     if (editId) {
       await updateDoc(doc(db, "products", editId), {
-        name, price, category, imageUrl,
+        name, price, category, imageUrl, quantity,
         updatedAt: serverTimestamp()
       });
       status.textContent = "✅ แก้ไขสินค้าสำเร็จ";
     } else {
       await addDoc(collection(db, "products"), {
-        name, price, category, imageUrl,
+        name, price, category, imageUrl, quantity,
         createdAt: serverTimestamp()
       });
       status.textContent = "✅ เพิ่มสินค้าสำเร็จ";
@@ -73,12 +88,22 @@ onSnapshot(collection(db, "products"), (snapshot) => {
 });
 
 filterSelect?.addEventListener("change", renderFiltered);
+sortSelect?.addEventListener("change", renderFiltered);
 
 function renderFiltered() {
   const category = filterSelect?.value || "all";
-  const filtered = category === "all"
+  let filtered = category === "all"
     ? allProducts
     : allProducts.filter(p => p.category === category);
+
+  const sortValue = sortSelect?.value;
+  if (sortValue === "price") {
+    filtered.sort((a, b) => a.price - b.price);
+  } else if (sortValue === "quantity") {
+    filtered.sort((a, b) => (b.quantity ?? 0) - (a.quantity ?? 0));
+  } else {
+    filtered.sort((a, b) => (b.createdAt?.seconds ?? 0) - (a.createdAt?.seconds ?? 0));
+  }
 
   renderProducts(filtered);
 }
@@ -88,13 +113,17 @@ function renderProducts(products) {
 
   products.forEach(data => {
     const li = document.createElement("li");
-    li.className = "bg-white p-4 rounded shadow flex items-center justify-between space-x-4 mt-2";
+    const isOutOfStock = (data.quantity ?? 0) <= 0;
+    li.className = `bg-white p-4 rounded shadow flex items-center justify-between space-x-4 mt-2 ${isOutOfStock ? 'opacity-60' : ''}`;
     li.innerHTML = `
       <div class="flex items-center space-x-4">
         <img src="${data.imageUrl}" alt="${data.name}" class="w-20 h-20 object-cover rounded">
         <div>
           <p class="font-bold">${data.name}</p>
           <p class="text-sm text-gray-600">฿${data.price}</p>
+          <p class="text-sm ${isOutOfStock ? 'text-red-500 font-bold' : 'text-gray-600'}">
+            ${isOutOfStock ? '❗ สินค้าหมด' : `เหลือ: ${data.quantity} ชิ้น`}
+          </p>
         </div>
       </div>
       <div class="space-x-2">
@@ -115,6 +144,7 @@ function renderProducts(products) {
       document.getElementById("name").value = data.name;
       document.getElementById("price").value = data.price;
       document.getElementById("category").value = data.category;
+      document.getElementById("quantity").value = data.quantity ?? 0;
       imageUrlInput.value = data.imageUrl;
       hiddenImageUrl.value = data.imageUrl;
       imagePreview.src = data.imageUrl;
@@ -165,7 +195,7 @@ imageFileInput?.addEventListener('change', async (e) => {
 async function uploadImageToCloudinary(file) {
   const formData = new FormData();
   formData.append('file', file);
- formData.append("upload_preset", "upload-slip"); // 👉 เปลี่ยนเป็นชื่อ upload preset จริงของคุณ
+  formData.append("upload_preset", "upload-slip");
   const response = await fetch('https://api.cloudinary.com/v1_1/dpgru06ox/image/upload', {
     method: 'POST',
     body: formData

@@ -1,193 +1,166 @@
 <!DOCTYPE html>
-  <html lang="th">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Le Poney - ตะกร้าสินค้า</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="Cart.css" />
-    <script type="module" src="firebase.js"></script>
-    <script type="module" src="firebase-auth-modal.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-  </head>
-  <body class="bg-gray-100">
-    <header id="top-bar" class="top-bar">
-      <h1 class="top-bar-title logo-text">Le Poney</h1>
-      <div class="top-bar-buttons">
-        <button id="menu-btn" class="menu-button">☰</button>
-      </div>
-    </header>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Le Poney - Shopping Cart</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="Cart.css" rel="stylesheet"/>
+<script src="firebase.js" type="module"></script>
+<script src="firebase-auth-modal.js" type="module"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+</head>
+<body class="bg-gray-100">
 
-    <div id="overlay" class="overlay hidden"></div>
+<!-- 🔝 Top Bar -->
+<header class="top-bar" id="top-bar">
+  <h1 class="top-bar-title logo-text">Le Poney</h1>
+  <div class="top-bar-buttons">
+    <button class="menu-button" id="menu-btn">☰</button>
+  </div>
+</header>
 
-    <aside id="sidebar" class="sidebar">
-      <div class="sidebar-header">
-        <button id="close-btn" class="close-button">&times;</button>
-      </div>
-      <nav class="sidebar-nav">
-        <a href="Home.html" class="nav-link">🏡 Home</a>
-        <div class="dropdown">
-          <button class="dropdown-btn">🛍️ Product <span class="arrow">&#9662;</span></button>
-          <div class="dropdown-content">
-            <a href="Product.html" class="dropdown-link">🍰 Bakery & Dessert</a>
-            <a href="Product2.html" class="dropdown-link">🥤 SMOOTHIE & OTHERS</a>
-          </div>
-        </div>
-        <a href="Cart.html" id="cart-menu" class="nav-link">🛒 Cart <span id="cart-count">(0)</span></a>
-        <a href="OrderHistory.html" class="nav-link hidden" id="order-history-link">📋 ประวัติการสั่งซื้อ</a>
-        <a href="Delivery.html" class="nav-link">🚚 Delivery</a>
-        <a href="Event.html" class="nav-link">📅 Event</a>
-        <a id="login-btn" class="nav-link cursor-pointer">🔑 Login</a>
-        <a id="logout-btn" class="nav-link cursor-pointer hidden">🚪 Logout</a>
-      </nav>
-    </aside>
+<div class="overlay hidden" id="overlay"></div>
 
-    <!-- 🔐 Modal เข้าสู่ระบบ -->
-    <!-- 🌟 Modal Popup สำหรับล็อกอิน -->
-      <div id="login-modal" class="modal hidden">
-          <div class="modal-content">
-              <button id="close-login-modal" class="close-modal">&times;</button>
-              <h2 class="modal-title text-pink-600">🔑 เข้าสู่ระบบ</h2>
+<!-- 📚 Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <button class="close-button" id="close-btn">×</button>
+    <nav class="sidebar-nav">
+      <a class="nav-link" data-translate="home" href="Home.html">🏡 Home</a>
 
-              <!-- 🧾 ฟอร์มล็อกอิน -->
-              <label for="login-email" class="input-label">อีเมล</label>
-              <input type="email" id="login-email" class="modal-input" placeholder="example@email.com" />
-
-              <label for="login-password" class="input-label">รหัสผ่าน</label>
-              <input type="password" id="login-password" class="modal-input" placeholder="กรอกรหัสผ่าน" />
-
-              <button id="submit-login" class="modal-button">เข้าสู่ระบบ</button>
-
-              <div class="my-4 text-center text-sm text-gray-400">หรือ</div>
-
-              <!-- 🔐 ปุ่มล็อกอินด้วย Google -->
-              <button id="google-login-btn" class="modal-button bg-white border border-gray-300 text-gray-700 flex items-center justify-center gap-2">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google" />
-                เข้าสู่ระบบด้วย Google
-              </button>
-
-              <p class="text-center mt-2 text-sm text-blue-600 cursor-pointer" id="reset-password-link">
-                🔁 ลืมรหัสผ่านใช่ไหม? รีเซ็ตที่นี่
-              </p>
-
-              <p class="text-center mt-4 text-sm text-gray-600">
-                  ยังไม่มีบัญชี?
-                  <span id="openRegister" class="text-pink-600 modal-link">สมัครสมาชิก</span>
-              </p>
-          </div>
-      </div>
-
-      <!-- 📝 Modal สมัครสมาชิก -->
-      <div id="register-modal" class="modal hidden">
-          <div class="modal-content">
-              <button id="close-register-modal" class="close-modal">&times;</button>
-              <h2 class="modal-title text-green-600">📝 สมัครสมาชิก</h2>
-
-              <!-- 📥 ฟอร์มลงทะเบียน -->
-              <label for="register-firstname" class="input-label">ชื่อ</label>
-              <input type="text" id="register-firstname" class="modal-input" placeholder="ชื่อจริง" />
-
-              <label for="register-lastname" class="input-label">นามสกุล</label>
-              <input type="text" id="register-lastname" class="modal-input" placeholder="นามสกุล" />
-
-              <label for="register-username" class="input-label">ชื่อผู้ใช้</label>
-              <input type="text" id="register-username" class="modal-input" placeholder="ชื่อผู้ใช้ (ไม่ซ้ำ)" />
-
-              <label for="register-phone" class="input-label">หมายเลขโทรศัพท์</label>
-              <input type="tel" id="register-phone" class="modal-input" placeholder="0812345678" />
-
-              <label for="register-email" class="input-label">อีเมล</label>
-              <input type="email" id="register-email" class="modal-input" placeholder="example@email.com" />
-
-              <label for="register-password" class="input-label">รหัสผ่าน</label>
-              <input type="password" id="register-password" class="modal-input" placeholder="ตั้งรหัสผ่าน" />
-
-              <button id="submit-register" class="modal-button green">สมัครสมาชิก</button>
-
-              <p class="text-center mt-4 text-sm text-gray-600">
-                  มีบัญชีอยู่แล้ว?
-                  <span id="backToLogin" class="text-green-600 modal-link">กลับเข้าสู่ระบบ</span>
-              </p>
-          </div>
-      </div>
-
-    <!-- 🛒 ส่วนของตะกร้าสินค้า -->
-    <main class="cart-container min-h-screen flex justify-center items-center px-4">
-      <div class="w-full max-w-6xl">
-        <h2 class="text-2xl font-bold text-center mb-6">รายการสินค้าในตะกร้า</h2>
-        <div class="flex flex-col lg:flex-row gap-6">
-          <ul id="cart-items" class="cart-list flex-1"></ul>
-
-          <div class="cart-summary w-full lg:max-w-md bg-white p-4 rounded-lg shadow-md space-y-4">
-            <p class="total-items text-lg font-medium">📦 จำนวนทั้งหมด: <span id="total-items">0</span> ชิ้น</p>
-            <div class="text-right text-sm mt-4">
-              <p>💰 ยอดรวมก่อนส่วนลด: ฿<span id="subtotal-price">0.00</span></p>
-              <p>💵 ส่วนลด: ฿<span id="discount-amount">0.00</span></p>
-              <p class="font-bold text-lg text-pink-600">🧾 ยอดสุทธิ: ฿<span id="total-price">0.00</span></p>
-            </div>
-
-            <button id="clear-cart" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded w-full">
-              🗑️ ล้างตะกร้า
-            </button>
-
-            <!-- 🌟 วิธีชำระเงิน -->
-            <div class="mt-6">
-              <label for="payment-method" class="block mb-2 font-semibold">💳 วิธีชำระเงิน</label>
-              <select id="payment-method" class="w-full p-2 border rounded">
-                <option value="cod">เก็บเงินปลายทาง</option>
-                <option value="transfer">โอนเงินผ่านธนาคาร</option>
-              </select>
-            </div>
-
-            <!-- 🌟 อัปโหลดสลิป -->
-            <div id="slip-upload-container" class="mt-4 hidden">
-              <label for="payment-slip" class="block mb-2 font-semibold">📸 อัปโหลดสลิปโอนเงิน</label>
-              <input type="file" id="payment-slip" accept="--main1/S__565252.jpg" class="w-full" />
-              <img id="slip-preview" src="" alt="สลิปโอนเงิน" class="hidden mt-2 max-w-xs rounded border" />
-            </div>
-
-            <!-- 📲 QR Code Payment -->
-            <div id="qr-preview" class="mt-4 hidden text-center">
-              <p class="font-semibold mb-2">📲 สแกนเพื่อชำระเงิน</p>
-              <canvas id="qr-canvas" class="mx-auto"></canvas>
-            </div>
-
-            <!-- 🎟️ ใส่รหัสคูปอง -->
-            <div class="my-4">
-              <input id="coupon-input" type="text" placeholder="ใส่รหัสคูปอง" class="border p-2 rounded w-full" />
-              <button id="apply-coupon" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded w-full">🎟️ ใช้คูปอง</button>
-            </div>
-
-            <!-- ✅ แสดงผลลัพธ์คูปอง -->
-            <div id="coupon-result" class="hidden text-green-600 font-semibold">
-              ✅ ใช้คูปองแล้ว! ส่วนลด <span id="discount-value"></span>%
-            </div>
-
-            <button id="checkout" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded w-full">
-              ✅ ดำเนินการสั่งซื้อ
-            </button>
-          </div>
+      <div class="dropdown">
+        <button class="dropdown-btn" data-translate="products">🛍️ Products <span class="arrow">▾</span></button>
+        <div class="dropdown-content">
+          <a class="dropdown-link" data-translate="bakerydessert" href="Product.html">🍰 Bakery & Dessert</a>
+          <a class="dropdown-link" data-translate="smoothieothers" href="Product2.html">🥤 Smoothies & Others</a>
         </div>
       </div>
-    </main>
 
-    <!-- ✅ Modal ยืนยันก่อนสั่งซื้อ -->
-    <div id="confirm-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-      <div class="bg-white p-6 rounded shadow-lg max-w-sm w-full">
-        <h2 class="text-lg font-semibold mb-4">📦 ยืนยันคำสั่งซื้อ</h2>
-        <p>คุณต้องการยืนยันการสั่งซื้อหรือไม่?</p>
-        <div class="mt-4 flex justify-end gap-2">
-          <button id="cancel-submit" class="px-4 py-2 bg-gray-300 rounded">ยกเลิก</button>
-          <button id="confirm-submit" class="px-4 py-2 bg-green-500 text-white rounded">ยืนยัน</button>
+      <a class="nav-link" data-translate="cart" href="Cart.html" id="cart-menu">🛒 Cart <span id="cart-count">(0)</span></a>
+      <a class="nav-link hidden" data-translate="orderhistory" href="OrderHistory.html" id="order-history-link">📋 Order History</a>
+      <a class="nav-link" data-translate="delivery" href="Delivery.html">🚚 Delivery</a>
+      <a class="nav-link" data-translate="events" href="Event.html">📅 Events</a>
+      <a class="nav-link cursor-pointer" data-translate="login" id="login-btn">🔑 Login</a>
+      <a class="nav-link cursor-pointer hidden" data-translate="logout" id="logout-btn">🚪 Logout</a>
+    </nav>
+  </div>
+</aside>
+
+<!-- 🔒 Login Modal -->
+<div class="modal hidden" id="login-modal">
+  <div class="modal-content">
+    <button class="close-modal" id="close-login-modal">×</button>
+    <h2 class="modal-title text-pink-600" data-translate="login">🔑 Login</h2>
+    <label class="input-label" for="login-email" data-translate="email">Email</label>
+    <input class="modal-input" id="login-email" placeholder="example@email.com" type="email"/>
+    <label class="input-label" for="login-password" data-translate="password">Password</label>
+    <input class="modal-input" id="login-password" placeholder="Enter your password" type="password"/>
+    <p class="text-center mt-2 text-sm text-blue-600 cursor-pointer" id="reset-password-link" data-translate="forgotpassword">
+      🔁 Forgot password? Reset here
+    </p>
+    <button class="modal-button" id="submit-login" data-translate="loginbutton">Login</button>
+    <div class="my-4 text-center text-sm text-gray-400" data-translate="or">or</div>
+    <button class="modal-button bg-white border border-gray-300 text-gray-700 flex items-center justify-center gap-2" id="google-login-btn" data-translate="googlelogin">
+      <img alt="Google" class="w-5 h-5" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"/> Login with Google
+    </button>
+    <p class="text-center mt-4 text-sm text-gray-600">
+      <span data-translate="noaccount">Don’t have an account?</span>
+      <span class="text-pink-600 modal-link" id="openRegister" data-translate="registerlink">Register</span>
+    </p>
+  </div>
+</div>
+
+<!-- 📝 Register Modal -->
+<div class="modal hidden" id="register-modal">
+  <div class="modal-content">
+    <button class="close-modal" id="close-register-modal">×</button>
+    <h2 class="modal-title text-green-600" data-translate="register">📝 Register</h2>
+    <label class="input-label" for="register-firstname" data-translate="firstname">First Name</label>
+    <input class="modal-input" id="register-firstname" placeholder="First name" type="text"/>
+    <label class="input-label" for="register-lastname" data-translate="lastname">Last Name</label>
+    <input class="modal-input" id="register-lastname" placeholder="Last name" type="text"/>
+    <label class="input-label" for="register-username" data-translate="username">Username</label>
+    <input class="modal-input" id="register-username" placeholder="Unique username" type="text"/>
+    <label class="input-label" for="register-phone" data-translate="phone">Phone Number</label>
+    <input class="modal-input" id="register-phone" placeholder="0812345678" type="tel"/>
+    <label class="input-label" for="register-email" data-translate="email">Email</label>
+    <input class="modal-input" id="register-email" placeholder="example@email.com" type="email"/>
+    <label class="input-label" for="register-password" data-translate="password">Password</label>
+    <input class="modal-input" id="register-password" placeholder="Create password" type="password"/>
+    <button class="modal-button green" id="submit-register" data-translate="registerbutton">Register</button>
+    <p class="text-center mt-4 text-sm text-gray-600">
+      <span data-translate="alreadyaccount">Already have an account?</span>
+      <span class="text-green-600 modal-link" id="backToLogin" data-translate="backlogin">Back to login</span>
+    </p>
+  </div>
+</div>
+
+<!-- 🛒 Cart Section -->
+<main class="cart-container min-h-screen flex justify-center items-center px-4">
+  <div class="w-full max-w-6xl">
+    <h2 class="text-2xl font-bold text-center mb-6" data-translate="cartitems">Your Cart Items</h2>
+    <div class="flex flex-col lg:flex-row gap-6">
+      <ul class="cart-list flex-1" id="cart-items"></ul>
+      <div class="cart-summary w-full lg:max-w-md bg-white p-4 rounded-lg shadow-md space-y-4">
+        <p class="total-items text-lg font-medium">
+          <span data-translate="totalitems">📦 Total items:</span>
+          <span id="total-items">0</span>
+        </p>
+        <div class="text-right text-sm mt-4">
+          <p><span data-translate="subtotal">💰 Subtotal:</span> ฿<span id="subtotal-price">0.00</span></p>
+          <p><span data-translate="discount">💵 Discount:</span> ฿<span id="discount-amount">0.00</span></p>
+          <p class="font-bold text-lg text-pink-600"><span data-translate="total">🧾 Total:</span> ฿<span id="total-price">0.00</span></p>
         </div>
+        <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded w-full" id="clear-cart" data-translate="clearcart">🗑️ Clear Cart</button>
+        <div class="mt-6">
+          <label class="block mb-2 font-semibold" for="payment-method" data-translate="paymentmethod">💳 Payment Method</label>
+          <select class="w-full p-2 border rounded" id="payment-method">
+            <option value="cod" data-translate="cashondelivery">Cash on Delivery</option>
+            <option value="transfer" data-translate="banktransfer">Bank Transfer</option>
+          </select>
+        </div>
+        <div class="mt-4 hidden" id="slip-upload-container">
+          <label class="block mb-2 font-semibold" for="payment-slip" data-translate="uploadslip">📸 Upload Transfer Slip</label>
+          <input accept="image/*" class="w-full" id="payment-slip" type="file"/>
+          <img alt="Payment Slip" class="hidden mt-2 max-w-xs rounded border" id="slip-preview"/>
+        </div>
+        <div class="mt-4 text-center" id="qr-preview">
+          <p class="font-semibold mb-2" data-translate="scantopay">📲 Scan to Pay</p>
+          <img alt="PromptPay QR" class="mx-auto max-w-xs rounded border" src="1AADC819-648E-455C-A9AA-340AE8E40F2D.jpg"/>
+        </div>
+        <div class="my-4">
+          <input class="border p-2 rounded w-full" id="coupon-input" placeholder="Enter coupon code" type="text"/>
+          <button class="mt-2 bg-blue-500 text-white px-4 py-2 rounded w-full" id="apply-coupon" data-translate="applycoupon">🎟️ Apply Coupon</button>
+        </div>
+        <div class="hidden text-green-600 font-semibold" id="coupon-result" data-translate="couponapplied">✅ Coupon applied! Discount <span id="discount-value"></span>%</div>
+        <button class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded w-full" id="checkout" data-translate="proceedcheckout">✅ Proceed to Checkout</button>
       </div>
     </div>
+  </div>
+</main>
 
-    <script type="module" src="cart.js"></script>
-    <script type="module" src="firebase-auth-modal.js"></script>
-    <script type="module" src="redirect-to-admin.js"></script>
-    <script>
+<!-- ✅ Confirm Order Modal -->
+<div class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50" id="confirm-modal">
+  <div class="bg-white p-6 rounded shadow-lg max-w-sm w-full">
+    <h2 class="text-lg font-semibold mb-4" data-translate="confirmorder">📦 Confirm Order</h2>
+    <p data-translate="confirmquestion">Are you sure you want to confirm your order?</p>
+    <div class="mt-4 flex justify-end gap-2">
+      <button class="px-4 py-2 bg-gray-300 rounded" id="cancel-submit" data-translate="cancel">Cancel</button>
+      <button class="px-4 py-2 bg-green-500 text-white rounded" id="confirm-submit" data-translate="confirm">Confirm</button>
+    </div>
+  </div>
+</div>
 
-    </script>
-  </body>
-  </html>
+<!-- 🌍 Language Switcher -->
+<div class="fixed bottom-5 right-5 z-50 flex flex-col gap-3">
+  <button class="w-12 h-12 rounded-full bg-pink-500 text-white text-2xl shadow-lg hover:bg-pink-600 hover:scale-110 transition" id="lang-th">🇹🇭</button>
+  <button class="w-12 h-12 rounded-full bg-blue-500 text-white text-2xl shadow-lg hover:bg-blue-600 hover:scale-110 transition" id="lang-en">🇺🇸</button>
+</div>
+
+<script src="cart.js" type="module"></script>
+<script src="firebase-auth-modal.js" type="module"></script>
+<script src="redirect-to-admin.js" type="module"></script>
+<script src="lang-switcher.js"></script>
+</body>
+</html>

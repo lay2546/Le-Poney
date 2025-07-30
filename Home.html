@@ -1,201 +1,168 @@
 <!DOCTYPE html>
-<html lang="th">
+
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Responsive Sidebar with Dropdown</title>
-
-  <!-- 🔗 เรียกใช้ Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- 🎨 เชื่อม CSS สำหรับหน้าแรก (ควรเปลี่ยนชื่อเป็นภาษาอังกฤษ) -->
-  <link rel="stylesheet" href="home.css">
-
-  <!-- 🔐 เชื่อม Firebase และระบบล็อกอิน -->
-  <script type="module" src="firebase.js"></script>
-  <script type="module" src="firebase-auth-modal.js"></script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Responsive Sidebar with Dropdown</title>
+<!-- 🔗 Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- 🎨 Link to Home Page CSS -->
+<link href="home.css" rel="stylesheet"/>
+<!-- 🔐 Firebase and Auth System -->
+<script src="firebase.js" type="module"></script>
+<script src="firebase-auth-modal.js" type="module"></script>
 </head>
-
-<header id="top-bar" class="flex items-center justify-between bg-pink-500 text-white px-6 py-4 mb-6 shadow-md">
-  <div class="flex items-center gap-3">
-    <h1 class="top-bar-title logo-text">Le Poney</h1>
-  </div>
-  <button id="menu-btn" class="menu-button">☰</button> 
-  </button>
+<header class="flex items-center justify-between bg-pink-500 text-white px-6 py-4 mb-6 shadow-md" id="top-bar">
+<div class="flex items-center gap-3">
+<h1 class="top-bar-title logo-text">Le Poney</h1>
+</div>
+<button class="menu-button" id="menu-btn">☰</button>
 </header>
-<!-- 1) SECTION — ใช้ w-screen แทน w-full + ตัด mx-auto/rounded -->
-<section class="w-full max-w-[1536px] h-[400px] mx-auto mt-12 overflow-hidden relative hero-slider bg-white">
-  <div id="slides" class="flex h-full transition-transform duration-700 ease-in-out slides">
-    <img src="le-poney_banner_FULL_VISIBLE_1536x400.png" class="slider-img contain-mode" />
-    <img src="ChatGPT Image 7 ก.ค. 2568 03_50_01 (1) (1).png" class="slider-img contain-mode" />
-    <img src="le_poney_1902x399.png" class="slider-img contain-mode" />
-  </div>
-  <button onclick="prevSlide()" class="nav-btn prev">←</button>
-  <button onclick="nextSlide()" class="nav-btn next">→</button>
+<!-- 1) Slider Section -->
+<section class="w-full max-w-full h-auto mx-auto mt-2 overflow-hidden relative bg-white">
+<div class="flex transition-transform duration-700 ease-in-out" id="slides">
+<img alt="Slide 1" class="w-full object-cover flex-shrink-0" src="le_poney_1902x399.png"/>
+<img alt="Slide 2" class="w-full object-cover flex-shrink-0" src="ChatGPT Image 7 ก.ค. 2568 03_50_01 (1) (1).png"/>
+<img alt="Slide 3" class="w-full object-cover flex-shrink-0" src="le_poney_contact_resized_1536x400.png"/>
+</div>
+<button class="absolute top-1/2 left-4 -translate-y-1/2 bg-white bg-opacity-50 px-3 py-1 rounded" onclick="prevSlide()">←</button>
+<button class="absolute top-1/2 right-4 -translate-y-1/2 bg-white bg-opacity-50 px-3 py-1 rounded" onclick="nextSlide()">→</button>
 </section>
-
-
-  <!-- 🕶 Overlay สำหรับปิด Sidebar -->
-  <div id="overlay" class="overlay hidden"></div>
-
-<!-- 📚 เมนูด้านข้าง (Sidebar) -->
-<aside id="sidebar" class="sidebar">
-  <div class="sidebar-header">
-    <button id="close-btn" class="close-button">&times;</button>
-  </div>
-  <nav class="sidebar-nav">
-
-    <!-- 🔗 เมนูหลัก -->
-    <a href="Home.html" class="nav-link">🏡 หน้าหลัก</a>
-
-    <!-- 🔽 เมนูสินค้า -->
-    <div class="dropdown">
-      <button class="dropdown-btn">
-        🛍️ สินค้า <span class="arrow">&#9662;</span>
-      </button>
-      <div class="dropdown-content">
-        <a href="Product.html" class="dropdown-link">🍰 เบเกอรี่ & ของหวาน</a>
-        <a href="Product2.html" class="dropdown-link">🥤 สมูทตี้ & อื่น ๆ</a>
-      </div>
-    </div>
-
-    <!-- 🔗 เมนูเพิ่มเติม -->
-    <a href="Cart.html" id="cart-menu" class="nav-link">🛒 ตะกร้าสินค้า <span id="cart-count">(0)</span></a>
-    <a href="OrderHistory.html" id="order-history-link" class="nav-link hidden">📋 ประวัติคำสั่งซื้อ</a>
-    <a href="Delivery.html" class="nav-link">🚚 การจัดส่ง</a>
-    <a href="Event.html" class="nav-link">📅 กิจกรรม</a>
-
-    <!-- 🔐 ปุ่ม Login / Logout -->
-    <a id="login-btn" class="nav-link cursor-pointer">🔑 เข้าสู่ระบบ</a>
-    <a id="logout-btn" class="nav-link cursor-pointer hidden">🚪 ออกจากระบบ</a>
-  </nav>
+<!-- 🕶 Overlay for Sidebar -->
+<div class="overlay hidden" id="overlay"></div>
+<!-- 📚 Sidebar Menu -->
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<button class="close-button" id="close-btn">×</button>
+</div>
+<nav class="sidebar-nav">
+<!-- 🔗 Main Menu -->
+<a class="nav-link" data-translate="home" href="Home.html">🏡 Home</a>
+<!-- 🔽 Product Menu -->
+<div class="dropdown">
+<button class="dropdown-btn">
+        🛍️ Products <span class="arrow">▾</span>
+</button>
+<div class="dropdown-content">
+<a class="dropdown-link" href="Product.html">🍰 Bakery &amp; Sweets</a>
+<a class="dropdown-link" href="Product2.html">🥤 Smoothies &amp; More</a>
+</div>
+</div>
+<!-- 🔗 Other Links -->
+<a class="nav-link" data-translate="cart" href="Cart.html" id="cart-menu">🛒 Cart <span id="cart-count">(0)</span></a>
+<a class="nav-link hidden" href="OrderHistory.html" id="order-history-link">📋 Order History</a>
+<a class="nav-link" data-translate="delivery" href="Delivery.html">🚚 Delivery</a>
+<a class="nav-link" data-translate="event" href="Event.html">📅 Events</a>
+<!-- 🔐 Login / Logout -->
+<a class="nav-link cursor-pointer" id="login-btn">🔑 Login</a>
+<a class="nav-link cursor-pointer hidden" id="logout-btn">🚪 Logout</a>
+</nav>
 </aside>
+<!-- 🔒 Login Modal -->
+<div class="modal hidden" id="login-modal">
+<div class="modal-content">
+<button class="close-modal" id="close-login-modal">×</button>
+<h2 class="modal-title text-pink-600">🔑 Login</h2>
+<!-- 🧾 Login Form -->
+<label class="input-label" for="login-email">Email</label>
+<input class="modal-input" id="login-email" placeholder="example@email.com" type="email"/>
+<label class="input-label" for="login-password">Password</label>
+<input class="modal-input" id="login-password" placeholder="Enter your password" type="password"/>
+<p class="text-center mt-2 text-sm text-blue-600 cursor-pointer" id="reset-password-link">
+      🔁 Forgot password? Reset here
+    </p>
+<button class="modal-button" id="submit-login">Login</button>
+<div class="my-4 text-center text-sm text-gray-400">or</div>
+<!-- 🔐 Google Login Button -->
+<button class="modal-button bg-white border border-gray-300 text-gray-700 flex items-center justify-center gap-2" id="google-login-btn">
+<img alt="Google" class="w-5 h-5" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
+      Login with Google
+    </img></button>
+<p class="text-center mt-4 text-sm text-gray-600">
+      Don’t have an account?
+      <span class="text-pink-600 modal-link" id="openRegister">Register</span>
+</p>
+</div>
+</div>
+<!-- 📝 Register Modal -->
+<div class="modal hidden" id="register-modal">
+<div class="modal-content">
+<button class="close-modal" id="close-register-modal">×</button>
+<h2 class="modal-title text-green-600">📝 Register</h2>
+<!-- 📥 Register Form -->
+<label class="input-label" for="register-firstname">First Name</label>
+<input class="modal-input" id="register-firstname" placeholder="First name" type="text"/>
+<label class="input-label" for="register-lastname">Last Name</label>
+<input class="modal-input" id="register-lastname" placeholder="Last name" type="text"/>
+<label class="input-label" for="register-username">Username</label>
+<input class="modal-input" id="register-username" placeholder="Unique username" type="text"/>
+<label class="input-label" for="register-phone">Phone Number</label>
+<input class="modal-input" id="register-phone" placeholder="0812345678" type="tel"/>
+<label class="input-label" for="register-email">Email</label>
+<input class="modal-input" id="register-email" placeholder="example@email.com" type="email"/>
+<label class="input-label" for="register-password">Password</label>
+<input class="modal-input" id="register-password" placeholder="Create password" type="password"/>
+<button class="modal-button green" id="submit-register">Register</button>
+<p class="text-center mt-4 text-sm text-gray-600">
+      Already have an account?
+      <span class="text-green-600 modal-link" id="backToLogin">Back to login</span>
+</p>
+</div>
+</div>
+<!-- 🌸 Shop Philosophy -->
+<section class="philosophy-section">
+<h2 class="section-title"><span class="bouncy-icon">🌸</span> Our Philosophy</h2>
+<p class="section-desc">At Le Poney, we believe that making sweets and drinks isn’t just about flavor 🍰 — it’s an art of joy shared with every customer ☕✨</p>
+</section>
+<!-- 🧃 Smoothies of the Day -->
+<section class="text-center smoothie-grid">
+<h2 class="section-title text-cyan-600">🧃 Smoothies of the Day</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="day-box">📅 <strong>Mon:</strong> Passion Fruity 💛</div>
+<div class="day-box">📅 <strong>Tue:</strong> Straw &amp; Raspberry 🍓</div>
+<div class="day-box">📅 <strong>Wed:</strong> Peach &amp; Apricot 🍑</div>
+<div class="day-box">📅 <strong>Thu:</strong> Kale 🥬</div>
+<div class="day-box">📅 <strong>Fri:</strong> Passion Fruit 🧡</div>
+<div class="day-box">📅 <strong>Sat:</strong> Berry Blast 🫐</div>
+<div class="day-box">📅 <strong>Sun:</strong> Tropical Delight 🍍</div>
+</div>
+</section>
+<!-- 🧭 Navigation Cards -->
+<div class="activities">
+<a class="nav-card" href="Product.html">
+<img alt="Dessert Menu" class="nav-img" src="ChatGPT Image 14 มิ.ย. 2568 15_06_12.png"/>
+<h3 class="nav-title text-pink-700">🍰 Dessert Menu</h3>
+</a>
+<a class="nav-card" href="Product2.html">
+<img alt="Smoothie Menu" class="nav-img" src="ChatGPT Image 14 มิ.ย. 2568 15_07_33.png"/>
+<h3 class="nav-title text-cyan-700">🥤 Smoothie Menu</h3>
+</a>
+<a class="nav-card" data-translate="cart" href="Cart.html">
+<img alt="Shopping Cart" class="nav-img" src="ChatGPT Image 14 มิ.ย. 2568 15_36_48.png"/>
+<h3 class="nav-title text-yellow-700">🛒 Shopping Cart</h3>
+</a>
+<a class="nav-card" data-translate="event" href="Event.html">
+<img alt="Special Events" class="nav-img" src="ChatGPT Image 14 มิ.ย. 2568 15_38_09.png"/>
+<h3 class="nav-title text-indigo-700">📅 Special Events</h3>
+</a>
+</div>
+<!-- 🦶 Footer -->
+<footer class="footer">
+<p class="footer-text">🍓 Thank you for visiting Le Poney — Come back soon for more sweet delights 💕</p>
+<div class="footer-links">
+<a class="footer-link" data-translate="all_menu" href="Product.html">All Menu</a>
+<a class="footer-link" data-translate="delivery" href="Delivery.html">Delivery</a>
+<a class="footer-link" data-translate="event" href="Event.html">Events</a>
+</div>
+</footer>
+<div class="fixed bottom-5 right-5 z-50 flex flex-col gap-3">
+  <button class="w-12 h-12 rounded-full bg-pink-500 text-white text-2xl shadow-lg hover:bg-pink-600 hover:scale-110 transition" id="lang-th">🇹🇭</button>
+  <button class="w-12 h-12 rounded-full bg-blue-500 text-white text-2xl shadow-lg hover:bg-blue-600 hover:scale-110 transition" id="lang-en">🇺🇸</button>
+</div>
+<!-- 🔚 Load Scripts at the End -->
+<script src="script.js" type="module"></script>
+<script src="firebase-auth-modal.js" type="module"></script>
+<script src="redirect-to-admin.js" type="module"></script>
 
-
-  <!-- 🔒 Modal เข้าสู่ระบบ -->
-  <div id="login-modal" class="modal hidden">
-    <div class="modal-content">
-      <button id="close-login-modal" class="close-modal">&times;</button>
-      <h2 class="modal-title text-pink-600">🔑 เข้าสู่ระบบ</h2>
-
-      <!-- 🧾 ฟอร์มล็อกอิน -->
-      <label for="login-email" class="input-label">อีเมล</label>
-      <input type="email" id="login-email" class="modal-input" placeholder="example@email.com" />
-
-      <label for="login-password" class="input-label">รหัสผ่าน</label>
-      <input type="password" id="login-password" class="modal-input" placeholder="กรอกรหัสผ่าน" />
-         <p class="text-center mt-2 text-sm text-blue-600 cursor-pointer" id="reset-password-link">
-        🔁 ลืมรหัสผ่านใช่ไหม? รีเซ็ตที่นี่
-      </p>
-      <button id="submit-login" class="modal-button">เข้าสู่ระบบ</button>
-
-      <div class="my-4 text-center text-sm text-gray-400">หรือ</div>
-
-      <!-- 🔐 ปุ่มล็อกอินด้วย Google -->
-      <button id="google-login-btn" class="modal-button bg-white border border-gray-300 text-gray-700 flex items-center justify-center gap-2">
-        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google" />
-        เข้าสู่ระบบด้วย Google
-      </button>
-
-
-      <p class="text-center mt-4 text-sm text-gray-600">
-        ยังไม่มีบัญชี?
-        <span id="openRegister" class="text-pink-600 modal-link">สมัครสมาชิก</span>
-      </p>
-    </div>
-  </div>
-
-  <!-- 📝 Modal สมัครสมาชิก -->
-  <div id="register-modal" class="modal hidden">
-    <div class="modal-content">
-      <button id="close-register-modal" class="close-modal">&times;</button>
-      <h2 class="modal-title text-green-600">📝 สมัครสมาชิก</h2>
-
-      <!-- 📥 ฟอร์มลงทะเบียน -->
-      <label for="register-firstname" class="input-label">ชื่อ</label>
-      <input type="text" id="register-firstname" class="modal-input" placeholder="ชื่อจริง" />
-
-      <label for="register-lastname" class="input-label">นามสกุล</label>
-      <input type="text" id="register-lastname" class="modal-input" placeholder="นามสกุล" />
-
-      <label for="register-username" class="input-label">ชื่อผู้ใช้</label>
-      <input type="text" id="register-username" class="modal-input" placeholder="ชื่อผู้ใช้ (ไม่ซ้ำ)" />
-
-      <label for="register-phone" class="input-label">หมายเลขโทรศัพท์</label>
-      <input type="tel" id="register-phone" class="modal-input" placeholder="0812345678" />
-
-      <label for="register-email" class="input-label">อีเมล</label>
-      <input type="email" id="register-email" class="modal-input" placeholder="example@email.com" />
-
-      <label for="register-password" class="input-label">รหัสผ่าน</label>
-      <input type="password" id="register-password" class="modal-input" placeholder="ตั้งรหัสผ่าน" />
-
-      <button id="submit-register" class="modal-button green">สมัครสมาชิก</button>
-
-      <p class="text-center mt-4 text-sm text-gray-600">
-        มีบัญชีอยู่แล้ว?
-        <span id="backToLogin" class="text-green-600 modal-link">กลับเข้าสู่ระบบ</span>
-      </p>
-    </div>
-    
-  </div>
-
-
-
-  <!-- 🌸 ปรัชญาของร้าน -->
-  <section class="philosophy-section">
-    <h2 class="section-title"><span class="bouncy-icon">🌸</span> ปรัชญาของร้าน</h2>
-    <p class="section-desc">Le Poney เชื่อว่าการทำขนมและเครื่องดื่มไม่ใช่แค่เรื่องของรสชาติ 🍰 แต่ก็คือศิลปะแห่งความสุขที่มอบให้ลูกค้าทุกคน ☕✨</p>
-  </section>
-
-  <!-- 🧃 สมูทตี้ประจำวัน -->
-  <section class="text-center smoothie-grid">
-    <h2 class="section-title text-cyan-600">🧃 Smoothies of the day</h2>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <!-- 📆 แสดงสมูทตี้แต่ละวัน -->
-      <div class="day-box">📅 <strong>Mon:</strong> Passion Fruity 💛</div>
-      <div class="day-box">📅 <strong>Tue:</strong> Straw & Raspberry 🍓</div>
-      <div class="day-box">📅 <strong>Wed:</strong> Peach & Apricot 🍑</div>
-      <div class="day-box">📅 <strong>Thu:</strong> Kale 🥬</div>
-      <div class="day-box">📅 <strong>Fri:</strong> Passion Fruit 🧡</div>
-      <div class="day-box">📅 <strong>Sat:</strong> Berry Blast 🫐</div>
-      <div class="day-box">📅 <strong>Sun:</strong> Tropical Delight 🍍</div>
-    </div>
-  </section>
-
-  <!-- 🧭 เมนูการ์ดกิจกรรม / สินค้า -->
-  <div class="activities">
-    <a href="Product.html" class="nav-card">
-      <img src="ChatGPT Image 14 มิ.ย. 2568 15_06_12.png" alt="เมนูขนม" class="nav-img">
-      <h3 class="nav-title text-pink-700">🍰 เมนูขนม</h3>
-    </a>
-    <a href="Product2.html" class="nav-card">
-      <img src="ChatGPT Image 14 มิ.ย. 2568 15_07_33.png" alt="เมนูสมูทตี้" class="nav-img">
-      <h3 class="nav-title text-cyan-700">🥤 เมนูสมูทตี้</h3>
-    </a>
-    <a href="Cart.html" class="nav-card">
-      <img src="ChatGPT Image 14 มิ.ย. 2568 15_36_48.png" alt="ตะกร้าสินค้า" class="nav-img">
-      <h3 class="nav-title text-yellow-700">🛒 ตะกร้าสินค้า</h3>
-    </a>
-    <a href="Event.html" class="nav-card">
-      <img src="ChatGPT Image 14 มิ.ย. 2568 15_38_09.png" alt="กิจกรรมพิเศษ" class="nav-img">
-      <h3 class="nav-title text-indigo-700">📅 กิจกรรมพิเศษ</h3>
-    </a>
-  </div>
-
-  <!-- 🦶 ส่วนท้าย (Footer) -->
-  <footer class="footer">
-    <p class="footer-text">🍓 ขอบคุณที่แวะมา Le Poney — กลับมาใหม่พร้อมของหวานสุดฟิน 💕</p>
-    <div class="footer-links">
-      <a href="Product.html" class="footer-link">เมนูทั้งหมด</a>
-      <a href="Delivery.html" class="footer-link">การจัดส่ง</a>
-      <a href="Event.html" class="footer-link">กิจกรรม</a>
-    </div>
-  </footer>
-
-  <!-- 🔚 เชื่อม JS หลังสุดเพื่อโหลดหน้าให้เสร็จก่อน -->
-  <script type="module" src="script.js"></script>
-  <script type="module" src="firebase-auth-modal.js"></script>
-  <script type="module" src="redirect-to-admin.js"></script>
-</body>
 </html>

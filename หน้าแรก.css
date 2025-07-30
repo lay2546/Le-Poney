@@ -734,4 +734,26 @@ body {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-6px); }
 }
+/* มือถือ */
+@media (max-width: 576px) {
+  .activities {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  header .logo-text {
+    font-size: 1.2rem;
+  }
+  .nav-card img {
+    height: auto;
+    width: 100%;
+  }
+}
+
+/* แท็บเล็ต */
+@media (max-width: 768px) {
+  .activities {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 

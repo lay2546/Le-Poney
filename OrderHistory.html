@@ -1,106 +1,103 @@
 <!DOCTYPE html>
-<html lang="th">
+
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>โปรไฟล์ของฉัน</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="หน้าแรก.css">
-  <script type="module" src="firebase.js"></script>
-  <script type="module" src="firebase-auth-modal.js"></script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Profile</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="home.css" rel="stylesheet"/>
+<script src="firebase.js" type="module"></script>
+<script src="firebase-auth-modal.js" type="module"></script>
 </head>
 <body class="bg-gray-100 min-h-screen">
-  <header id="top-bar" class="top-bar">
-    <h1 class="top-bar-title logo-text">Le Poney</h1>
-    <div class="top-bar-buttons">
-      <button id="menu-btn" class="menu-button">☰</button>
-    </div>
-  </header>
-  <div id="overlay" class="overlay hidden"></div>
-  <aside id="sidebar" class="sidebar">
-    <div class="sidebar-header">
-      <button id="close-btn" class="close-button">&times;</button>
-    </div>
-    <nav class="sidebar-nav">
-         <a href="Home.html" class="nav-link">🏡 หน้าหลัก</a>
-
-    <!-- 🔽 เมนูสินค้า -->
-    <div class="dropdown">
-      <button class="dropdown-btn">
-        🛍️ สินค้า <span class="arrow">&#9662;</span>
-      </button>
-      <div class="dropdown-content">
-        <a href="Product.html" class="dropdown-link">🍰 เบเกอรี่ & ของหวาน</a>
-        <a href="Product2.html" class="dropdown-link">🥤 สมูทตี้ & อื่น ๆ</a>
-      </div>
-    </div>
-    <!-- 🔗 เมนูเพิ่มเติม -->
-    <a href="Cart.html" id="cart-menu" class="nav-link">🛒 ตะกร้าสินค้า <span id="cart-count">(0)</span></a>
-    <a href="OrderHistory.html" id="order-history-link" class="nav-link hidden">📋 ประวัติคำสั่งซื้อ</a>
-    <a href="Delivery.html" class="nav-link">🚚 การจัดส่ง</a>
-    <a href="Event.html" class="nav-link">📅 กิจกรรม</a>
-
-    <!-- 🔐 ปุ่ม Login / Logout -->
-    <a id="login-btn" class="nav-link cursor-pointer">🔑 เข้าสู่ระบบ</a>
-    <a id="logout-btn" class="nav-link cursor-pointer hidden">🚪 ออกจากระบบ</a>
-  </nav>
+<header class="top-bar" id="top-bar">
+<h1 class="top-bar-title logo-text">Le Poney</h1>
+<div class="top-bar-buttons">
+<button class="menu-button" id="menu-btn">☰</button>
+</div>
+</header>
+<div class="overlay hidden" id="overlay"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<button class="close-button" id="close-btn">×</button>
+</div>
+<nav class="sidebar-nav">
+<a class="nav-link" data-translate="home" href="Home.html">🏡 Home</a>
+<!-- 🔽 Product Menu -->
+<div class="dropdown">
+<button class="dropdown-btn">
+          🛍️ Products <span class="arrow">▾</span>
+</button>
+<div class="dropdown-content">
+<a class="dropdown-link" href="Product.html">🍰 Bakery &amp; Sweets</a>
+<a class="dropdown-link" href="Product2.html">🥤 Smoothies &amp; Others</a>
+</div>
+</div>
+<!-- 🔗 More Menu -->
+<a class="nav-link" data-translate="cart" href="Cart.html" id="cart-menu">🛒 Cart <span id="cart-count">(0)</span></a>
+<a class="nav-link hidden" href="OrderHistory.html" id="order-history-link">📋 Order History</a>
+<a class="nav-link" data-translate="delivery" href="Delivery.html">🚚 Delivery</a>
+<a class="nav-link" data-translate="event" href="Event.html">📅 Events</a>
+<!-- 🔐 Login / Logout -->
+<a class="nav-link cursor-pointer" id="login-btn">🔑 Login</a>
+<a class="nav-link cursor-pointer hidden" id="logout-btn">🚪 Logout</a>
+</nav>
 </aside>
-
-  <!-- ข้อมูลโปรไฟล์ผู้ใช้ -->
-  <div class="w-full max-w-3xl p-6 bg-white rounded-lg shadow-xl mx-auto mt-16">
-    <h1 class="text-3xl font-bold text-center text-green-600 mb-6">👤 ข้อมูลโปรไฟล์ของคุณ</h1>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div>
-        <label for="profile-name" class="block text-sm font-medium text-gray-700">ชื่อ-นามสกุล</label>
-        <input type="text" id="profile-name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="ชื่อ" />
-      </div>
-      <div>
-        <label for="profile-username" class="block text-sm font-medium text-gray-700">ชื่อผู้ใช้</label>
-        <input type="text" id="profile-username" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="ชื่อผู้ใช้" />
-      </div>
-      <div>
-        <label for="profile-email" class="block text-sm font-medium text-gray-700">อีเมล</label>
-        <input type="email" id="profile-email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="อีเมล" disabled />
-      </div>
-      <div>
-        <label for="profile-phone" class="block text-sm font-medium text-gray-700">เบอร์โทร</label>
-        <input type="tel" id="profile-phone" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="เบอร์โทร" />
-      </div>
-
-      <div class="col-span-1 md:col-span-2">
-        <label for="profile-address" class="block text-sm font-medium text-gray-700">ที่อยู่จัดส่ง</label>
-        <textarea id="profile-address" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="ที่อยู่จัดส่ง"></textarea>
-      </div>
-    </div>
-    <!-- วางปุ่มที่นี่ -->
-    <button id="save-profile-btn" class="mt-6 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-      💾 บันทึกข้อมูล
+<!-- User Profile Information -->
+<div class="w-full max-w-3xl p-6 bg-white rounded-lg shadow-xl mx-auto mt-16">
+<h1 class="text-3xl font-bold text-center text-green-600 mb-6">👤 Your Profile Information</h1>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-medium text-gray-700" for="profile-name">Full Name</label>
+<input class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" id="profile-name" placeholder="Full name" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700" for="profile-username">Username</label>
+<input class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" id="profile-username" placeholder="Username" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700" for="profile-email">Email</label>
+<input class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" disabled="" id="profile-email" placeholder="Email" type="email"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700" for="profile-phone">Phone Number</label>
+<input class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" id="profile-phone" placeholder="Phone number" type="tel"/>
+</div>
+<div class="col-span-1 md:col-span-2">
+<label class="block text-sm font-medium text-gray-700" for="profile-address">Shipping Address</label>
+<textarea class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" id="profile-address" placeholder="Shipping address" rows="3"></textarea>
+</div>
+</div>
+<!-- Save Button -->
+<button class="mt-6 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" id="save-profile-btn">
+      💾 Save Profile
     </button>
-  </div>
-
-  <!-- รายการสั่งซื้อ -->
-  <div class="w-full max-w-4xl p-6 bg-white rounded-lg shadow-xl mx-auto mt-10">
-    <h2 class="text-2xl font-bold text-center text-pink-600 mb-6">📦 ประวัติการสั่งซื้อ</h2>
-    <div class="mb-6">
-      <h3 class="text-lg font-semibold mb-2">📍 ที่อยู่จัดส่งล่าสุด</h3>
-      <div id="address-info" class="bg-gray-100 p-4 rounded"></div>
-      <button id="edit-address-btn" class="mt-2 bg-yellow-400 text-white px-4 py-2 rounded">✏️ แก้ไขที่อยู่</button>
-    </div>
-    <div class="mb-6 flex flex-wrap items-center gap-4">
-      <div>
-        <label for="filter-date" class="block text-sm font-semibold">📅 เลือกวันที่:</label>
-        <input type="date" id="filter-date" class="border p-2 rounded" />
-      </div>
-      <button id="search-btn" class="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700 mt-6">
-        🔍 ค้นหา
+</div>
+<!-- Order History Section -->
+<div class="w-full max-w-4xl p-6 bg-white rounded-lg shadow-xl mx-auto mt-10">
+<h2 class="text-2xl font-bold text-center text-pink-600 mb-6">📦 Order History</h2>
+<div class="mb-6">
+<h3 class="text-lg font-semibold mb-2">📍 Latest Shipping Address</h3>
+<div class="bg-gray-100 p-4 rounded" id="address-info"></div>
+<button class="mt-2 bg-yellow-400 text-white px-4 py-2 rounded" id="edit-address-btn">✏️ Edit Address</button>
+</div>
+<div class="mb-6 flex flex-wrap items-center gap-4">
+<div>
+<label class="block text-sm font-semibold" for="filter-date">📅 Select Date:</label>
+<input class="border p-2 rounded" id="filter-date" type="date"/>
+</div>
+<button class="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700 mt-6" id="search-btn">
+        🔍 Search
       </button>
-    </div>
-    <ul id="order-list" class="space-y-6"></ul>
-  </div>
-  <script src="script.js"></script>
-  <script type="module" src="firebase-auth-modal.js"></script>
-  <script type="module" src="order-history.js"></script>
-  <script type="module" src="redirect-to-admin.js"></script>
-  <script type="module" src="profile.js"></script>
-</body>
+</div>
+<ul class="space-y-6" id="order-list"></ul>
+</div>
+<!-- Scripts -->
+<script src="script.js"></script>
+<script src="firebase-auth-modal.js" type="module"></script>
+<script src="order-history.js" type="module"></script>
+<script src="redirect-to-admin.js" type="module"></script>
+<script src="profile.js" type="module"></script>
+<div class="fixed bottom-5 right-5 z-50 flex flex-col gap-3"><button class="w-12 h-12 rounded-full bg-pink-500 text-white text-2xl shadow-lg hover:bg-pink-600 hover:scale-110 transition" id="lang-th">🇹🇭</button><button class="w-12 h-12 rounded-full bg-blue-500 text-white text-2xl shadow-lg hover:bg-blue-600 hover:scale-110 transition" id="lang-en">🇺🇸</button></div><script src="lang-switcher.js"></script></body>
 </html>

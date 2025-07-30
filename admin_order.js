@@ -1,7 +1,7 @@
 // OCR พร้อม logic ตรวจยอดละเอียดและ tolerant
 import { db } from './firebase.js';
 import {
-  collection, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc
+  collection, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc, getDoc
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 const tbody = document.getElementById('order-table-body');
@@ -94,6 +94,11 @@ function renderOrders() {
       <td class="py-2 px-4">${data.paymentMethod === "transfer" ? "โอนเงิน" : "เก็บปลายทาง"}</td>
       <td class="py-2 px-4">${slipHtml}</td>
       <td class="py-2 px-4">${paymentStatus}</td>
+      <td class="py-2 px-4">
+        ${renderStatusBadge(data.deliveryStatus)}
+        <p class="text-xs text-gray-600 mt-1">สถานะตอนนี้: ${getDeliveryStatusLabel(data.deliveryStatus)}</p>
+        ${renderStepProgress(data.deliveryStatus)}
+      </td>
       <td class="py-2 px-4 space-y-1">
         <button class="status-btn bg-yellow-400 text-white text-xs px-2 py-1 rounded" data-id="${docId}" data-status="preparing">🛠 เตรียมสินค้า</button>
         <button class="status-btn bg-blue-500 text-white text-xs px-2 py-1 rounded" data-id="${docId}" data-status="shipping">🚚 กำลังจัดส่ง</button>
@@ -269,3 +274,53 @@ deleteSelectedBtn?.addEventListener("click", async () => {
     alert("เกิดข้อผิดพลาดในการลบ");
   }
 });
+
+// ✅ ฟังก์ชันหักสต็อก
+export async function deductStock(productId, quantityToDeduct) {
+  const productRef = doc(db, "products", productId);
+  const productSnap = await getDoc(productRef);
+  if (!productSnap.exists()) throw new Error("สินค้าไม่พบ");
+  const currentQuantity = productSnap.data().quantity ?? 0;
+  if (currentQuantity < quantityToDeduct) {
+    throw new Error("จำนวนสินค้าที่ขอสั่งเกินจากจำนวนคงเหลือ");
+  }
+  const newQuantity = currentQuantity - quantityToDeduct;
+  await updateDoc(productRef, { quantity: newQuantity });
+}
+
+// ✅ แสดงสถานะในรายการสินค้า
+function getDeliveryStatusLabel(status) {
+  switch (status) {
+    case 'preparing': return '🛠 เตรียมสินค้า';
+    case 'shipping': return '🚚 กำลังจัดส่ง';
+    case 'delivered': return '✅ จัดส่งแล้ว';
+    default: return '⏳ รอดำเนินการ';
+  }
+}
+
+function renderStatusBadge(status) {
+  const label = getDeliveryStatusLabel(status);
+  let color = 'gray';
+  if (status === 'preparing') color = 'yellow-400';
+  else if (status === 'shipping') color = 'blue-500';
+  else if (status === 'delivered') color = 'green-600';
+  return `<span class="px-2 py-1 text-xs rounded text-white bg-${color}">${label}</span>`;
+}
+
+// ✅ สถานะตามลำดับขั้นตอน
+const ORDER_STEPS = ['preparing', 'shipping', 'delivered'];
+
+function renderStepProgress(currentStatus) {
+  return `
+    <div class="flex items-center space-x-2">
+      ${ORDER_STEPS.map(status => {
+        const isActive = ORDER_STEPS.indexOf(status) <= ORDER_STEPS.indexOf(currentStatus);
+        const color = isActive ? 'bg-green-500' : 'bg-gray-300';
+        return `<div class="flex items-center space-x-1">
+          <div class="w-3 h-3 rounded-full ${color}"></div>
+          <span class="text-xs text-gray-600">${getDeliveryStatusLabel(status)}</span>
+        </div>`;
+      }).join('<span class="text-gray-400">➔</span>')}
+    </div>
+  `;
+}
